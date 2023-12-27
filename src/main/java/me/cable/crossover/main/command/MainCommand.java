@@ -5,13 +5,13 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
-import me.cable.crossover.main.util.Rest;
 import me.cable.crossover.main.CrossoverMain;
 import me.cable.crossover.main.currency.Currency;
 import me.cable.crossover.main.handler.MinigameSettingsHandler;
 import me.cable.crossover.main.handler.SettingsHandler;
+import me.cable.crossover.main.util.Color;
+import me.cable.crossover.main.util.Rest;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -40,13 +40,13 @@ public class MainCommand extends CustomCommand {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length == 0) {
             PluginDescriptionFile pdf = crossoverMain.getDescription();
-            sender.sendMessage(ChatColor.GREEN + "Server is running " + pdf.getName() + " v" + pdf.getVersion() + ".");
+            sender.sendMessage(Color.SUCCESS + "Server is running " + pdf.getName() + " v" + pdf.getVersion() + ".");
             return true;
         }
 
         switch (args[0]) {
             case "currency" -> {
-                String usage = ChatColor.RED + "Usage: /" + label + " currency get <player> <currency> OR /"
+                String usage = Color.ERROR + "Usage: /" + label + " currency get <player> <currency> OR /"
                         + label + " currency <add|remove|set> <player> <currency> <amount>";
 
                 if (args.length < 4) {
@@ -59,7 +59,7 @@ public class MainCommand extends CustomCommand {
                 Player player = Bukkit.getPlayer(playerName);
 
                 if (player == null) {
-                    sender.sendMessage(ChatColor.RED + "That player does not exist!");
+                    sender.sendMessage(Color.ERROR + "That player does not exist!");
                     return true;
                 }
 
@@ -68,15 +68,15 @@ public class MainCommand extends CustomCommand {
                 Currency currency = Currency.getCurrencyIfExists(currencyId);
 
                 if (currency == null) {
-                    sender.sendMessage(ChatColor.RED + "That currency does not exist!");
+                    sender.sendMessage(Color.ERROR + "That currency does not exist!");
                     return true;
                 }
 
                 if (operation.equals("get")) {
                     BigDecimal amount = currency.get(playerUuid);
-                    sender.sendMessage(ChatColor.GOLD + playerName
-                            + ChatColor.GREEN + " has " + ChatColor.GOLD + amount.toPlainString()
-                            + ChatColor.GREEN + " of the currency " + ChatColor.GOLD + currencyId + ChatColor.GREEN + ".");
+                    sender.sendMessage(Color.SPECIAL + playerName
+                            + Color.SUCCESS + " has " + Color.SPECIAL + amount.toPlainString()
+                            + Color.SUCCESS + " of the currency " + Color.SPECIAL + currencyId + Color.SUCCESS + ".");
                     return true;
                 }
                 if (args.length < 5) {
@@ -96,21 +96,21 @@ public class MainCommand extends CustomCommand {
                 switch (operation) {
                     case "add" -> {
                         currency.deposit(playerUuid, amount);
-                        sender.sendMessage(ChatColor.GREEN + "Added " + ChatColor.GOLD + amount.toPlainString()
-                                + ChatColor.GREEN + " to " + ChatColor.GOLD + playerName + ChatColor.GREEN + "'s "
-                                + ChatColor.GOLD + currencyId + ChatColor.GREEN + " account.");
+                        sender.sendMessage(Color.SUCCESS + "Added " + Color.SPECIAL + amount.toPlainString()
+                                + Color.SUCCESS + " to " + Color.SPECIAL + playerName + Color.SUCCESS + "'s "
+                                + Color.SPECIAL + currencyId + Color.SUCCESS + " account.");
                     }
                     case "remove" -> {
                         currency.withdraw(playerUuid, amount);
-                        sender.sendMessage(ChatColor.GREEN + "Removed " + ChatColor.GOLD + amount.toPlainString()
-                                + ChatColor.GREEN + " from " + ChatColor.GOLD + playerName + ChatColor.GREEN + "'s "
-                                + ChatColor.GOLD + currencyId + ChatColor.GREEN + " account.");
+                        sender.sendMessage(Color.SUCCESS + "Removed " + Color.SPECIAL + amount.toPlainString()
+                                + Color.SUCCESS + " from " + Color.SPECIAL + playerName + Color.SUCCESS + "'s "
+                                + Color.SPECIAL + currencyId + Color.SUCCESS + " account.");
                     }
                     case "set" -> {
                         currency.set(playerUuid, amount);
-                        sender.sendMessage(ChatColor.GREEN + "Set " + ChatColor.GOLD + amount.toPlainString()
-                                + ChatColor.GREEN + " to " + ChatColor.GOLD + playerName + ChatColor.GREEN + "'s "
-                                + ChatColor.GOLD + currencyId + ChatColor.GREEN + " account.");
+                        sender.sendMessage(Color.SUCCESS + "Set " + Color.SPECIAL + amount.toPlainString()
+                                + Color.SUCCESS + " to " + Color.SPECIAL + playerName + Color.SUCCESS + "'s "
+                                + Color.SPECIAL + currencyId + Color.SUCCESS + " account.");
                     }
                     default -> sender.sendMessage(usage);
                 }
@@ -122,8 +122,8 @@ public class MainCommand extends CustomCommand {
                 minigameSettingsHandler.load(player);
                 settingsHandler.load(player);
 
-                sender.sendMessage(ChatColor.GREEN + "Configuration reloaded in "
-                        + ChatColor.GOLD + (System.currentTimeMillis() - millis) + " ms" + ChatColor.GREEN + ".");
+                sender.sendMessage(Color.SUCCESS + "Configuration reloaded in "
+                        + Color.SPECIAL + (System.currentTimeMillis() - millis) + " ms" + Color.SUCCESS + ".");
             }
             case "updatebooths" -> {
                 StringBuilder sb = new StringBuilder();
@@ -159,15 +159,15 @@ public class MainCommand extends CustomCommand {
                     String statusMessage = Rest.getStatusMessage(res);
 
                     if ("success".equals(statusMessage)) {
-                        sender.sendMessage(ChatColor.GREEN + "Successfully updated Discord voice channels ("
-                                + ChatColor.GOLD + "" + finalTotalRegions + ChatColor.GREEN + " region" + (finalTotalRegions == 1 ? "" : "s")
-                                + ", " + ChatColor.GOLD + totalBooths + ChatColor.GREEN + " booth" + (totalBooths == 1 ? "" : "s") + ").");
+                        sender.sendMessage(Color.SUCCESS + "Successfully updated Discord voice channels ("
+                                + Color.SPECIAL + "" + finalTotalRegions + Color.SUCCESS + " region" + (finalTotalRegions == 1 ? "" : "s")
+                                + ", " + Color.SPECIAL + totalBooths + Color.SUCCESS + " booth" + (totalBooths == 1 ? "" : "s") + ").");
                     } else {
-                        sender.sendMessage(ChatColor.RED + "Could not update Discord voice channels.");
+                        sender.sendMessage(Color.ERROR + "Could not update Discord voice channels.");
                     }
                 });
             }
-            default -> sender.sendMessage(ChatColor.RED + "Unknown sub-command!");
+            default -> sender.sendMessage(Color.ERROR + "Unknown sub-command!");
         }
 
         return true;

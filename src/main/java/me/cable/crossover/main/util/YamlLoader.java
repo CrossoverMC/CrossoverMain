@@ -43,7 +43,7 @@ public class YamlLoader {
             logger.warning(message);
         }
         if (player != null) {
-            player.sendMessage(ChatColor.RED + message);
+            player.sendMessage(Color.ERROR + message);
         }
     }
 

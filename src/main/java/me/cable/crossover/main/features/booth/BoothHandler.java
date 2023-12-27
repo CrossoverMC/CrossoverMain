@@ -10,7 +10,7 @@ import com.sk89q.worldguard.session.handler.FlagValueChangeHandler;
 import com.sk89q.worldguard.session.handler.Handler;
 import me.cable.crossover.main.CrossoverMain;
 import me.cable.crossover.main.util.ItemBuilder;
-import me.cable.crossover.main.util.Keys;
+import me.cable.crossover.main.util.Constants;
 import me.cable.crossover.main.util.Rest;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -44,16 +44,16 @@ public class BoothHandler extends FlagValueChangeHandler<String> {
 
     private void onEnter(@NotNull Player player, @NotNull String booth) {
         playerBooths.put(player, booth);
-        player.getInventory().setItem(Keys.PRIMARY_SLOT, new ItemBuilder().material(Material.GRAY_DYE)
+        player.getInventory().setItem(Constants.PRIMARY_SLOT, new ItemBuilder().material(Material.GRAY_DYE)
                 .name("&6&lJoin Booth Voice")
                 .lore("&a&lRight-Click &7to join this", "&7booth's &9Discord &7voice channel.")
-                .pd(Keys.TOOL, Keys.TOOL_BOOTH)
+                .pd(Constants.TOOL_KEY, Constants.TOOL_BOOTH)
                 .create());
     }
 
     private void onLeave(@NotNull Player player) {
         playerBooths.remove(player);
-        player.getInventory().setItem(Keys.PRIMARY_SLOT, null);
+        player.getInventory().setItem(Constants.PRIMARY_SLOT, null);
     }
 
     private void handle(LocalPlayer localPlayer, String current, String last) {

@@ -6,9 +6,13 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 import me.cable.crossover.main.CrossoverMain;
 import me.cable.crossover.main.handler.Settings;
-import me.cable.crossover.main.util.Keys;
+import me.cable.crossover.main.util.Color;
+import me.cable.crossover.main.util.Constants;
 import me.cable.crossover.main.util.Utils;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Waterlogged;
 import org.bukkit.entity.Player;
@@ -62,13 +66,13 @@ public class ClutchListener implements Listener {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
 
-        String toolId = meta.getPersistentDataContainer().get(Keys.TOOL, PersistentDataType.STRING);
+        String toolId = meta.getPersistentDataContainer().get(Constants.TOOL_KEY, PersistentDataType.STRING);
         if (toolId == null) return;
 
         switch (toolId) {
-            case Keys.TOOL_LEVEL_1 -> handleLevel(e, 1);
-            case Keys.TOOL_LEVEL_2 -> handleLevel(e, 2);
-            case Keys.TOOL_LEVEL_3 -> handleLevel(e, 3);
+            case Constants.TOOL_LEVEL_1 -> handleLevel(e, 1);
+            case Constants.TOOL_LEVEL_2 -> handleLevel(e, 2);
+            case Constants.TOOL_LEVEL_3 -> handleLevel(e, 3);
         }
     }
 
@@ -79,7 +83,7 @@ public class ClutchListener implements Listener {
                 && e.getCause() == EntityDamageEvent.DamageCause.FALL
                 && ClutchHandler.savedPlayerLevels.containsKey(player)
                 && !Utils.hasBypass(player)) {
-            player.sendMessage(ChatColor.RED + "Clutch failed!");
+            player.sendMessage(Color.ERROR + "Clutch failed!");
             ClutchHandler.clutchFailed.add(player);
         }
     }
@@ -106,7 +110,7 @@ public class ClutchListener implements Listener {
         Integer savedLevel = ClutchHandler.savedPlayerLevels.get(player);
 
         if (savedLevel == null) {
-            player.sendMessage(ChatColor.RED + "Select a level!");
+            player.sendMessage(Color.ERROR + "Select a level!");
             e.setCancelled(true);
             return;
         }

@@ -1,6 +1,6 @@
 package me.cable.crossover.main.features.antigravity;
 
-import me.cable.crossover.main.util.Keys;
+import me.cable.crossover.main.util.Constants;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,14 +22,14 @@ public class AntigravityListener implements Listener {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
 
-        String data = meta.getPersistentDataContainer().get(Keys.TOOL, PersistentDataType.STRING);
+        String data = meta.getPersistentDataContainer().get(Constants.TOOL_KEY, PersistentDataType.STRING);
         if (data == null) return;
 
         Double multiplier = null;
 
-        if (data.equals(Keys.TOOL_SMALL_JETPACK)) {
+        if (data.equals(Constants.TOOL_SMALL_JETPACK)) {
             multiplier = 1.0;
-        } else if (data.equals(Keys.TOOL_LARGE_JETPACK)) {
+        } else if (data.equals(Constants.TOOL_LARGE_JETPACK)) {
             multiplier = 3.0;
         }
         if (multiplier != null) {

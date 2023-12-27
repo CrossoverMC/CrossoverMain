@@ -1,6 +1,7 @@
 package me.cable.crossover.main.command;
 
 import me.cable.crossover.main.CrossoverMain;
+import me.cable.crossover.main.util.Color;
 import me.cable.crossover.main.util.Rest;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -19,11 +20,11 @@ public class LinkCommand extends CustomCommand {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage(ChatColor.RED + "Only players may use this command!");
+            sender.sendMessage(Color.ERROR + "Only players may use this command!");
             return true;
         }
         if (args.length == 0) {
-            sender.sendMessage(ChatColor.RED + "You must provide a code!");
+            sender.sendMessage(Color.ERROR + "You must provide a code!");
             return true;
         }
 
@@ -37,14 +38,14 @@ public class LinkCommand extends CustomCommand {
 
                     switch (statusMessage) {
                         case "already_linked" ->
-                                sender.sendMessage(ChatColor.RED + "Your account has already been linked to a Discord account!");
-                        case "invalid_code" -> sender.sendMessage(ChatColor.RED + "That code is not valid!");
+                                sender.sendMessage(Color.ERROR + "Your account has already been linked to a Discord account!");
+                        case "invalid_code" -> sender.sendMessage(Color.ERROR + "That code is not valid!");
                         case "success" -> {
                             String discordUsername = (String) res.get("discordUsername");
-                            sender.sendMessage(ChatColor.GREEN + "Your account has been linked to the Discord account "
-                                    + ChatColor.GOLD + discordUsername + ChatColor.GREEN + ".");
+                            sender.sendMessage(Color.SUCCESS + "Your account has been linked to the Discord account "
+                                    + Color.SPECIAL + discordUsername + Color.SUCCESS + ".");
                         }
-                        default -> sender.sendMessage(ChatColor.RED + "Failed to link your accounts.");
+                        default -> sender.sendMessage(Color.ERROR + "Failed to link your accounts.");
                     }
                 });
 

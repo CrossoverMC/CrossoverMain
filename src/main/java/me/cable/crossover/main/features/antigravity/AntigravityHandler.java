@@ -11,7 +11,7 @@ import com.sk89q.worldguard.session.handler.FlagValueChangeHandler;
 import com.sk89q.worldguard.session.handler.Handler;
 import me.cable.crossover.main.CrossoverMain;
 import me.cable.crossover.main.util.ItemBuilder;
-import me.cable.crossover.main.util.Keys;
+import me.cable.crossover.main.util.Constants;
 import me.cable.crossover.main.util.Utils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -36,15 +36,15 @@ public class AntigravityHandler extends FlagValueChangeHandler<StateFlag.State> 
         if (Utils.hasBypass(player)) return;
 
         player.setGravity(false);
-        player.getInventory().setItem(Keys.PRIMARY_SLOT, new ItemBuilder().material(Material.BRUSH)
+        player.getInventory().setItem(Constants.PRIMARY_SLOT, new ItemBuilder().material(Material.BRUSH)
                 .name("&6&lSmall Jetpack")
                 .lore("&a&lRight-Click &7to propel yourself.")
-                .pd(Keys.TOOL, Keys.TOOL_SMALL_JETPACK)
+                .pd(Constants.TOOL_KEY, Constants.TOOL_SMALL_JETPACK)
                 .create());
-        player.getInventory().setItem(Keys.SECONDARY_SLOT, new ItemBuilder().material(Material.TORCHFLOWER)
+        player.getInventory().setItem(Constants.SECONDARY_SLOT, new ItemBuilder().material(Material.TORCHFLOWER)
                 .name("&9&lLarge Jetpack")
                 .lore("&a&lRight-Click &7to propel yourself.")
-                .pd(Keys.TOOL, Keys.TOOL_LARGE_JETPACK)
+                .pd(Constants.TOOL_KEY, Constants.TOOL_LARGE_JETPACK)
                 .create());
     }
 
@@ -52,8 +52,8 @@ public class AntigravityHandler extends FlagValueChangeHandler<StateFlag.State> 
         player.setGravity(true);
 
         if (!Utils.hasBypass(player)) {
-            player.getInventory().setItem(Keys.PRIMARY_SLOT, null);
-            player.getInventory().setItem(Keys.SECONDARY_SLOT, null);
+            player.getInventory().setItem(Constants.PRIMARY_SLOT, null);
+            player.getInventory().setItem(Constants.SECONDARY_SLOT, null);
         }
     }
 
