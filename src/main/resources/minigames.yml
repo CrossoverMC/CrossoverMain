@@ -1,0 +1,64 @@
+settings:
+  start-message:
+    - "&aStarting game!"
+  starting-message: # %time% %time_plural%
+    - "&aStarting in &6%time% &asecond%time_plural%"
+  waiting-message:
+    - "&cWaiting for players!"
+  waiting-message-period: 10 # seconds
+
+minigame-settings-template:
+  countdown: 10 # seconds
+  min-players: 1
+  waiting-region: "x1,y1,z1,x2,y2,z2"
+  world: "world"
+  minigame: { } # minigame-specific settings
+
+minigames:
+  highblock:
+    settings:
+      messages:
+        winner: # %player% %pos% %score% %score_plural%
+          - "&b%pos% - &f%player% &a- %score% point%score_plural%"
+        winners-bottom:
+          - "&6-----------------------"
+        winners-top:
+          - "     &6&lHighblock Winners"
+          - "&6-----------------------"
+    instances:
+      0:
+        countdown: 10
+        min-players: 1
+        waiting-region: "0,0,0,0,0,0"
+        world: "world"
+        minigame:
+          blocks-per-tick: 1
+          drop-height: 10
+          duration: 10 # seconds
+          material: SAND
+          min-y: 0
+          region: "0,0,0,0"
+  spleef:
+    settings:
+      messages:
+        elimination: # %player%
+          - "&6%player% &chas been eliminated!"
+        no-win:
+          - "&aNobody won the spleef match."
+        win: # %player%
+          - "&6%player% &ahas won the spleef match!"
+    instances:
+      0:
+        countdown: 10
+        min-players: 2
+        waiting-region: "0,0,0,0,0,0"
+        world: "world"
+        minigame:
+          blocks:
+            "0,0,0,0,0,0": TNT
+          elimination-teleport:
+            enabled: false
+            location: "0.0,0.0,0.0,0.0,0.0"
+          elimination-y: 0
+          spawns:
+            - "0.0,0.0,0.0,0.0,0.0"

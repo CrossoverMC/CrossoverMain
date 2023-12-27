@@ -1,0 +1,17 @@
+name: CrossoverMain
+version: '${project.version}'
+main: me.cable.crossover.main.CrossoverMain
+api-version: "1.20"
+
+depend:
+  - "PlaceholderAPI"
+  - "WorldGuard"
+
+commands:
+  crossovermain:
+    aliases: [ "cm" ]
+    permission: "crossovermain.command.crossovermain"
+  link:
+    permission: "crossovermain.command.link"
+  unlink:
+    permission: "crossovermain.command.unlink"
