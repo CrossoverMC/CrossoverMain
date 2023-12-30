@@ -123,7 +123,7 @@ public class MainCommand extends CustomCommand {
                 settingsHandler.load(player);
 
                 sender.sendMessage(Color.SUCCESS + "Configuration reloaded in "
-                        + Color.SPECIAL + (System.currentTimeMillis() - millis) + " ms" + Color.SUCCESS + ".");
+                        + Color.SPECIAL + (System.currentTimeMillis() - millis) + Color.SUCCESS + " ms.");
             }
             case "updatebooths" -> {
                 StringBuilder sb = new StringBuilder();
