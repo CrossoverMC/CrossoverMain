@@ -16,6 +16,7 @@ import java.util.UUID;
 public class PlayerData {
 
     public static final int UNLOAD_TIME = 60; // seconds
+    private static PlayerData instance;
 
     private final CrossoverMain crossoverMain;
 
@@ -23,9 +24,18 @@ public class PlayerData {
     private final File playerDataDirectory;
 
     public PlayerData(@NotNull CrossoverMain crossoverMain) {
+        if (instance != null) {
+            throw new IllegalStateException(getClass().getSimpleName() + " has already been instantiated");
+        }
+
+        instance = this;
         this.crossoverMain = crossoverMain;
         playerDataDirectory = new File(crossoverMain.getDataFolder(), "playerdata");
         startUnloader();
+    }
+
+    public static @NotNull YamlConfiguration get(@NotNull UUID playerUuid) {
+        return instance.getInternal(playerUuid);
     }
 
     private void startUnloader() {
@@ -60,7 +70,7 @@ public class PlayerData {
         return playerData;
     }
 
-    public @NotNull YamlConfiguration get(@NotNull UUID playerUuid) {
+    private @NotNull YamlConfiguration getInternal(@NotNull UUID playerUuid) {
         return loadedPlayerData.computeIfAbsent(playerUuid, this::load).config;
     }
 

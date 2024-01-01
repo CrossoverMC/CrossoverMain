@@ -11,7 +11,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 public class ConfigHelper {
@@ -54,6 +53,14 @@ public class ConfigHelper {
         return cs.getInt(path, def);
     }
 
+    public @Nullable Integer integerIfSet(@NotNull String path) {
+        return cs.isInt(path) ? cs.getInt(path) : null;
+    }
+
+    public @NotNull List<Integer> intList(@NotNull String path) {
+        return cs.getIntegerList(path);
+    }
+
     public double doub(@NotNull String path) {
         return cs.getDouble(path);
     }
@@ -86,22 +93,24 @@ public class ConfigHelper {
     }
 
     public @NotNull String snn(@NotNull String path) {
-        return Objects.requireNonNull(cs.getString(path));
+        return cs.getString(path, "");
     }
 
     public @NotNull Message message(@NotNull String path) {
         return new Message(strList(path));
     }
 
-    public @NotNull Material mat(@NotNull String path) {
+    @Contract("_, !null -> !null")
+    public @Nullable Material mat(@NotNull String path, @Nullable Material def) {
         String str = str(path);
+        if (str == null) return def;
 
-        if (str != null) {
-            Material m = Material.getMaterial(str);
-            if (m != null) return m;
-        }
+        Material m = Material.getMaterial(str);
+        return (m == null) ? def : m;
+    }
 
-        return Material.AIR;
+    public @NotNull Material mat(@NotNull String path) {
+        return mat(path, Material.AIR);
     }
 
     public @Nullable ConfigurationSection cs(@NotNull String path) {

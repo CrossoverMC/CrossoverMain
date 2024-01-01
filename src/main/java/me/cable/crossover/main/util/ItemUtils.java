@@ -9,6 +9,12 @@ import org.jetbrains.annotations.Nullable;
 
 public final class ItemUtils {
 
+    public static @Nullable String getStrPd(@Nullable ItemStack item, @NotNull NamespacedKey key) {
+        if (item == null) return null;
+        ItemMeta meta = item.getItemMeta();
+        return (meta == null) ? null : meta.getPersistentDataContainer().get(key, PersistentDataType.STRING);
+    }
+
     public static boolean hasPersistentData(@Nullable ItemStack item, @NotNull NamespacedKey key, @NotNull String value) {
         if (item == null) return false;
         ItemMeta meta = item.getItemMeta();

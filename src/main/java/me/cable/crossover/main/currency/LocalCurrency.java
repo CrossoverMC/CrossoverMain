@@ -1,8 +1,7 @@
 package me.cable.crossover.main.currency;
 
-import me.cable.crossover.main.util.ConfigHelper;
-import me.cable.crossover.main.CrossoverMain;
 import me.cable.crossover.main.handler.PlayerData;
+import me.cable.crossover.main.util.ConfigHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
@@ -13,11 +12,9 @@ import java.util.UUID;
  */
 public class LocalCurrency extends Currency {
 
-    private final PlayerData playerData;
     private final String id;
 
     public LocalCurrency(@NotNull String id) {
-        playerData = CrossoverMain.getInstance().getPlayerData();
         this.id = id;
     }
 
@@ -27,12 +24,12 @@ public class LocalCurrency extends Currency {
 
     @Override
     public @NotNull BigDecimal get(@NotNull UUID playerUuid) {
-        return new ConfigHelper(playerData.get(playerUuid)).bd("currencies." + id);
+        return new ConfigHelper(PlayerData.get(playerUuid)).bd("currencies." + id);
     }
 
     @Override
     public void set(@NotNull UUID playerUuid, @NotNull BigDecimal amount) {
-        playerData.get(playerUuid).set("currencies." + id, amount.toPlainString());
+        PlayerData.get(playerUuid).set("currencies." + id, amount.toPlainString());
     }
 
     public final @NotNull String getId() {

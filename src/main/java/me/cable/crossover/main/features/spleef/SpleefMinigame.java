@@ -1,9 +1,9 @@
 package me.cable.crossover.main.features.spleef;
 
+import me.cable.crossover.main.object.Minigame;
 import me.cable.crossover.main.object.Region;
 import me.cable.crossover.main.util.ConfigHelper;
 import me.cable.crossover.main.util.Message;
-import me.cable.crossover.main.object.Minigame;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -37,7 +37,7 @@ public class SpleefMinigame extends Minigame {
 
     @Override
     protected void cleanup() {
-        placeBlocks();
+        placeBlocks(false);
     }
 
     private void onEliminate(@NotNull Player player) {
@@ -78,18 +78,17 @@ public class SpleefMinigame extends Minigame {
         }
     }
 
-    private void placeBlocks() {
+    private void placeBlocks(boolean game) {
         ConfigHelper blocksSection = settings().ch("blocks");
         String worldName = getWorldName();
 
         for (String key : blocksSection.getKeys(false)) {
             String[] parts = key.split(",");
 
-
             try {
                 int x1 = Integer.parseInt(parts[0]), y1 = Integer.parseInt(parts[1]), z1 = Integer.parseInt(parts[2]),
                         x2 = Integer.parseInt(parts[3]), y2 = Integer.parseInt(parts[4]), z2 = Integer.parseInt(parts[5]);
-                Material material = blocksSection.mat(key);
+                Material material = blocksSection.mat(key + "." + (game ? "game" : "original"));
                 new Region(worldName, x1, y1, z1, x2, y2, z2).fill(material);
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
                 // ignored
@@ -132,7 +131,7 @@ public class SpleefMinigame extends Minigame {
         allPlayers = new ArrayList<>(players);
         alive = new ArrayList<>(players);
 
-        placeBlocks();
+        placeBlocks(true);
         teleportPlayers(players);
     }
 }

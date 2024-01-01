@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class PreventInventoryChange implements Listener {
+public class InventoryListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(@NotNull InventoryClickEvent e) {

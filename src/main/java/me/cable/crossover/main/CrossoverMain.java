@@ -22,12 +22,11 @@ import me.cable.crossover.main.handler.MailHandler;
 import me.cable.crossover.main.handler.MinigameSettingsHandler;
 import me.cable.crossover.main.handler.PlayerData;
 import me.cable.crossover.main.handler.SettingsHandler;
+import me.cable.crossover.main.listeners.InventoryListener;
 import me.cable.crossover.main.listeners.PlayerJoin;
-import me.cable.crossover.main.listeners.PreventInventoryChange;
 import me.cable.crossover.main.object.Minigame;
 import me.cable.crossover.main.papi.CrossoverPE;
 import me.cable.crossover.main.task.FallTeleportTask;
-import me.cable.crossover.main.task.Reader;
 import me.cable.crossover.main.task.VelocityBlocksTask;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -91,13 +90,13 @@ public final class CrossoverMain extends JavaPlugin {
     private void initializeHandlers() {
         minigameSettingsHandler = new MinigameSettingsHandler(this);
         playerData = new PlayerData(this);
-        mailHandler = new MailHandler(this);
+        mailHandler = new MailHandler();
         settingsHandler = new SettingsHandler(this);
     }
 
     private void registerListeners() {
         PluginManager pluginManager = getServer().getPluginManager();
-        pluginManager.registerEvents(new PreventInventoryChange(), this);
+        pluginManager.registerEvents(new InventoryListener(), this);
         pluginManager.registerEvents(new PlayerJoin(this), this);
     }
 
@@ -148,10 +147,6 @@ public final class CrossoverMain extends JavaPlugin {
 
     public MinigameSettingsHandler getMinigameSettingsHandler() {
         return minigameSettingsHandler;
-    }
-
-    public PlayerData getPlayerData() {
-        return playerData;
     }
 
     public SettingsHandler getSettingsHandler() {

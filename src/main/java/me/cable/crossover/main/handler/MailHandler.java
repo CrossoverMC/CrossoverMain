@@ -1,6 +1,5 @@
 package me.cable.crossover.main.handler;
 
-import me.cable.crossover.main.CrossoverMain;
 import me.cable.crossover.main.util.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -14,18 +13,12 @@ public class MailHandler {
 
     private static final String MAIL_PATH = "mail";
 
-    private final PlayerData playerData;
-
-    public MailHandler(@NotNull CrossoverMain crossoverMain) {
-        playerData = crossoverMain.getPlayerData();
-    }
-
     public void sendMail(@NotNull UUID playerUuid, @NotNull List<String> messages) {
         Player player = Bukkit.getPlayer(playerUuid);
 
         if (player == null) {
             // store
-            YamlConfiguration config = playerData.get(playerUuid);
+            YamlConfiguration config = PlayerData.get(playerUuid);
             List<String> currentMail = config.getStringList(MAIL_PATH);
             currentMail.addAll(messages);
             config.set(MAIL_PATH, currentMail);
@@ -36,7 +29,7 @@ public class MailHandler {
     }
 
     public void sendMail(@NotNull Player player) {
-        YamlConfiguration config = playerData.get(player.getUniqueId());
+        YamlConfiguration config = PlayerData.get(player.getUniqueId());
         List<String> mail = config.getStringList(MAIL_PATH);
         config.set(MAIL_PATH, null);
         new Message(mail).send(player);
