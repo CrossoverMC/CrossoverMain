@@ -33,6 +33,10 @@ public class ConfigHelper {
         this.cs = cs;
     }
 
+    public boolean isSet(@NotNull String path) {
+        return cs.isSet(path);
+    }
+
     public @NotNull Set<String> getKeys(boolean deep) {
         return cs.getKeys(deep);
     }
@@ -111,6 +115,10 @@ public class ConfigHelper {
 
     public @NotNull Material mat(@NotNull String path) {
         return mat(path, Material.AIR);
+    }
+
+    public boolean isCs(@NotNull String path) {
+        return cs.isConfigurationSection(path);
     }
 
     public @Nullable ConfigurationSection cs(@NotNull String path) {
