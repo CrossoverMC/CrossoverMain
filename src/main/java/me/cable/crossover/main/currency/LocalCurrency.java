@@ -10,7 +10,7 @@ import java.util.UUID;
 /**
  * A currency which is stored in this plugin's data folder.
  */
-public class LocalCurrency extends Currency {
+public abstract class LocalCurrency extends Currency {
 
     private final String id;
 
@@ -29,7 +29,7 @@ public class LocalCurrency extends Currency {
 
     @Override
     public void set(@NotNull UUID playerUuid, @NotNull BigDecimal amount) {
-        PlayerData.get(playerUuid).set("currencies." + id, amount.toPlainString());
+        PlayerData.get(playerUuid).set("currencies." + id, amount.stripTrailingZeros().toPlainString());
     }
 
     public final @NotNull String getId() {

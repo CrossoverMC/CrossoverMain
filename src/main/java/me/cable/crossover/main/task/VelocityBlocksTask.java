@@ -1,6 +1,6 @@
 package me.cable.crossover.main.task;
 
-import me.cable.crossover.main.handler.Settings;
+import me.cable.crossover.main.handler.SettingsConfigHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -18,7 +18,7 @@ public class VelocityBlocksTask implements Runnable {
 
     @Override
     public void run() {
-        ConfigurationSection cs = Settings.get().velocityBlocks();
+        ConfigurationSection cs = SettingsConfigHandler.getConfig().velocityBlocks();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (cooldowns.containsKey(player)) {

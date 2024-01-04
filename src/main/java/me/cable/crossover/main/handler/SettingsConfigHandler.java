@@ -9,21 +9,25 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
-public class SettingsHandler {
+public class SettingsConfigHandler {
 
     private final CrossoverMain crossoverMain;
 
+    private static YamlConfiguration config;
     private final File file;
 
-    public SettingsHandler(@NotNull CrossoverMain crossoverMain) {
+    public SettingsConfigHandler(@NotNull CrossoverMain crossoverMain) {
         this.crossoverMain = crossoverMain;
         file = new File(crossoverMain.getDataFolder(), "config.yml");
         load(null);
     }
 
+    public static @NotNull Settings getConfig() {
+        return new Settings(config);
+    }
+
     public void load(@Nullable Player player) {
-        YamlConfiguration config = new YamlLoader(file).resource(crossoverMain)
+        config = new YamlLoader(file).resource(crossoverMain)
                 .logger(crossoverMain).player(player).load().config();
-        Settings.get().setCs(config);
     }
 }

@@ -17,31 +17,32 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
 
-public class MinigameSettingsHandler {
+public class MinigameConfigHandler {
 
     public static final String MINIGAMES_PATH = "minigames";
 
-    private static final ConfigHelper configHelper = new ConfigHelper();
-
     private final CrossoverMain crossoverMain;
 
+    private static YamlConfiguration config;
     private final File file;
 
-    public static @NotNull ConfigHelper get() {
-        return configHelper;
-    }
-
-    public MinigameSettingsHandler(@NotNull CrossoverMain crossoverMain) {
+    public MinigameConfigHandler(@NotNull CrossoverMain crossoverMain) {
         this.crossoverMain = crossoverMain;
         file = new File(crossoverMain.getDataFolder(), "minigames.yml");
         load(null);
     }
 
+    public static @NotNull ConfigHelper getConfig() {
+        return new ConfigHelper(config);
+    }
+
     public void load(@Nullable Player player) {
         Minigame.unregisterAll();
-        YamlConfiguration config = new YamlLoader(file).resource(crossoverMain).logger(crossoverMain).player(player).load().config();
-        configHelper.setCs(config);
+        config = new YamlLoader(file).resource(crossoverMain).logger(crossoverMain).player(player).load().config();
+        loadInstances();
+    }
 
+    private void loadInstances() {
         Map<String, Function<ConfigurationSection, Minigame>> map = Map.of(
                 "highblock", HighblockMinigame::new,
                 "spleef", SpleefMinigame::new
@@ -50,7 +51,7 @@ public class MinigameSettingsHandler {
         for (Entry<String, Function<ConfigurationSection, Minigame>> entry : map.entrySet()) {
             String minigameId = entry.getKey();
             Function<ConfigurationSection, Minigame> factory = entry.getValue();
-            ConfigHelper instancesCs = configHelper.ch(MINIGAMES_PATH + "." + minigameId + ".instances");
+            ConfigHelper instancesCs = getConfig().ch(MINIGAMES_PATH + "." + minigameId + ".instances");
 
             for (String key : instancesCs.getKeys(false)) {
                 ConfigurationSection instanceCs = instancesCs.csnn(key);

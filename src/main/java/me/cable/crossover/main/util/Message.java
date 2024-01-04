@@ -23,7 +23,7 @@ public class Message {
     }
 
     public @NotNull Message placeholder(@NotNull String what, @Nullable String with) {
-        if (with != null) placeholders.put('{' + what + '}', with);
+        if (with != null) placeholders.put(Utils.placeholder(what), with);
         return this;
     }
 

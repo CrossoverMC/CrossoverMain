@@ -1,0 +1,27 @@
+egypt0:
+  title: "Merchant"
+  rows: 3
+  custom-items:
+    background:
+      material: BLACK_STAINED_GLASS_PANE
+      name: "&a"
+      fill: true
+  items:
+    i:
+      type: "pet"
+      slot: 10
+      price: 10.0
+      currency: "coins"
+      pet: "dog"
+    ii:
+      type: "custom"
+      slot: 11
+      price: 10.0
+      currency: "money"
+      item:
+        material: DIRT
+        name: "Dirt x1"
+        lore:
+          - "A piece of dirt"
+      on-purchase-commands: # {player}
+        - "give {player} dirt"

@@ -44,6 +44,10 @@ public abstract class Currency {
         return getCurrency("money");
     }
 
+    public abstract @NotNull String name();
+
+    public abstract @NotNull String format(@NotNull BigDecimal value, boolean showType);
+
     public abstract @NotNull BigDecimal get(@NotNull UUID playerUuid);
 
     public abstract void set(@NotNull UUID playerUuid, @NotNull BigDecimal amount);

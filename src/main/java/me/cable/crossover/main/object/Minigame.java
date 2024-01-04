@@ -1,7 +1,7 @@
 package me.cable.crossover.main.object;
 
 import me.cable.crossover.main.CrossoverMain;
-import me.cable.crossover.main.handler.MinigameSettingsHandler;
+import me.cable.crossover.main.handler.MinigameConfigHandler;
 import me.cable.crossover.main.util.ConfigHelper;
 import me.cable.crossover.main.util.Message;
 import org.bukkit.Bukkit;
@@ -31,7 +31,7 @@ public abstract class Minigame {
     private boolean gameRunning;
 
     private static @NotNull ConfigHelper getGlobalMinigameSettings() {
-        return MinigameSettingsHandler.get().ch("settings");
+        return MinigameConfigHandler.getConfig().ch("settings");
     }
 
     public static void initialize(@NotNull CrossoverMain crossoverMain) {
@@ -109,7 +109,7 @@ public abstract class Minigame {
     /* Settings */
 
     private @NotNull ConfigHelper getMinigameSettings() {
-        return MinigameSettingsHandler.get().ch(MinigameSettingsHandler.MINIGAMES_PATH + "." + id + ".settings");
+        return MinigameConfigHandler.getConfig().ch(MinigameConfigHandler.MINIGAMES_PATH + "." + id + ".settings");
     }
 
     protected final @NotNull Message getMessage(@NotNull String path) {

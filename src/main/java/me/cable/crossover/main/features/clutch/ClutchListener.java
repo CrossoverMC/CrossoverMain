@@ -5,7 +5,7 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 import me.cable.crossover.main.CrossoverMain;
-import me.cable.crossover.main.handler.Settings;
+import me.cable.crossover.main.handler.SettingsConfigHandler;
 import me.cable.crossover.main.util.Color;
 import me.cable.crossover.main.util.Constants;
 import me.cable.crossover.main.util.Utils;
@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 public class ClutchListener implements Listener {
 
     private void teleport(@NotNull Player player, int level) {
-        Location levelLoc = Settings.get().clutchLevels_level(player.getWorld(), level);
+        Location levelLoc = SettingsConfigHandler.getConfig().clutchLevels_level(player.getWorld(), level);
         player.teleport(levelLoc);
         ClutchHandler.clutchFailed.remove(player);
     }

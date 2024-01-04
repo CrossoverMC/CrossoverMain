@@ -7,8 +7,9 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import me.cable.crossover.main.CrossoverMain;
 import me.cable.crossover.main.currency.Currency;
-import me.cable.crossover.main.handler.MinigameSettingsHandler;
-import me.cable.crossover.main.handler.SettingsHandler;
+import me.cable.crossover.main.handler.MinigameConfigHandler;
+import me.cable.crossover.main.handler.SettingsConfigHandler;
+import me.cable.crossover.main.handler.ShopConfigHandler;
 import me.cable.crossover.main.util.Color;
 import me.cable.crossover.main.util.Rest;
 import org.bukkit.Bukkit;
@@ -27,13 +28,15 @@ import java.util.UUID;
 
 public class MainCommand extends CustomCommand {
 
-    private final MinigameSettingsHandler minigameSettingsHandler;
-    private final SettingsHandler settingsHandler;
+    private final SettingsConfigHandler settingsConfigHandler;
+    private final MinigameConfigHandler minigameConfigHandler;
+    private final ShopConfigHandler shopConfigHandler;
 
     public MainCommand(@NotNull CrossoverMain crossoverMain) {
         super(crossoverMain);
-        minigameSettingsHandler = crossoverMain.getMinigameSettingsHandler();
-        settingsHandler = crossoverMain.getSettingsHandler();
+        settingsConfigHandler = crossoverMain.getSettingsConfigHandler();
+        minigameConfigHandler = crossoverMain.getMinigameConfigHelper();
+        shopConfigHandler = crossoverMain.getShopConfigHandler();
     }
 
     @Override
@@ -119,8 +122,9 @@ public class MainCommand extends CustomCommand {
                 long millis = System.currentTimeMillis();
                 Player player = (sender instanceof Player p) ? p : null;
 
-                minigameSettingsHandler.load(player);
-                settingsHandler.load(player);
+                settingsConfigHandler.load(player);
+                minigameConfigHandler.load(player);
+                shopConfigHandler.load(player);
 
                 sender.sendMessage(Color.SUCCESS + "Configuration reloaded in "
                         + Color.SPECIAL + (System.currentTimeMillis() - millis) + Color.SUCCESS + " ms.");

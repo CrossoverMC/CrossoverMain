@@ -14,5 +14,7 @@ commands:
     permission: "crossovermain.command.crossovermain"
   link:
     permission: "crossovermain.command.link"
+  shop:
+    permission: "crossovermain.command.shop"
   unlink:
     permission: "crossovermain.command.unlink"

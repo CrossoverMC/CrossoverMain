@@ -8,13 +8,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class Settings extends ConfigHelper {
 
-    private static final Settings settings = new Settings();
-
-    public static @NotNull Settings get() {
-        return settings;
+    public Settings(@NotNull ConfigurationSection cs) {
+        super(cs);
     }
-
-    private Settings() {}
 
     public @NotNull Location clutchLevels_level(@NotNull World world, int level) {
         return loc("clutch-levels." + level, world);

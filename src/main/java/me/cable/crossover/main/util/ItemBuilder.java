@@ -70,12 +70,12 @@ public class ItemBuilder {
     }
 
     public @NotNull ItemBuilder placeholder(@NotNull String what, @NotNull String with) {
-        placeholders.put('{' + what + '}', with);
+        placeholders.put(Utils.placeholder(what), with);
         return this;
     }
 
     public @NotNull ItemBuilder lorePlaceholder(@NotNull String what, @NotNull List<String> with) {
-        lorePlaceholders.put('{' + what + '}', with);
+        lorePlaceholders.put(Utils.placeholder(what), with);
         return this;
     }
 

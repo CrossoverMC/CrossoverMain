@@ -8,8 +8,10 @@ import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.session.SessionManager;
 import me.cable.crossover.main.command.LinkCommand;
 import me.cable.crossover.main.command.MainCommand;
+import me.cable.crossover.main.command.ShopCommand;
 import me.cable.crossover.main.command.UnlinkCommand;
-import me.cable.crossover.main.currency.LocalCurrency;
+import me.cable.crossover.main.currency.CoinsCurrency;
+import me.cable.crossover.main.currency.MoneyCurrency;
 import me.cable.crossover.main.features.antigravity.AntigravityHandler;
 import me.cable.crossover.main.features.antigravity.AntigravityListener;
 import me.cable.crossover.main.features.booth.BoothHandler;
@@ -18,14 +20,14 @@ import me.cable.crossover.main.features.clutch.ClutchHandler;
 import me.cable.crossover.main.features.clutch.ClutchListener;
 import me.cable.crossover.main.features.dohandler.DoHandler;
 import me.cable.crossover.main.features.highblock.HighblockPE;
-import me.cable.crossover.main.handler.MailHandler;
-import me.cable.crossover.main.handler.MinigameSettingsHandler;
-import me.cable.crossover.main.handler.PlayerData;
-import me.cable.crossover.main.handler.SettingsHandler;
+import me.cable.crossover.main.handler.*;
 import me.cable.crossover.main.listeners.InventoryListener;
+import me.cable.crossover.main.listeners.MenuListener;
 import me.cable.crossover.main.listeners.PlayerJoin;
 import me.cable.crossover.main.object.Minigame;
 import me.cable.crossover.main.papi.CrossoverPE;
+import me.cable.crossover.main.shop.CustomShopItem;
+import me.cable.crossover.main.shop.ShopItem;
 import me.cable.crossover.main.task.FallTeleportTask;
 import me.cable.crossover.main.task.VelocityBlocksTask;
 import org.bukkit.plugin.PluginManager;
@@ -39,10 +41,11 @@ public final class CrossoverMain extends JavaPlugin {
     public static StringFlag BOOTH_FLAG;
     public static StringFlag DO_FLAG;
 
+    private SettingsConfigHandler settingsConfigHandler;
+    private MinigameConfigHandler minigameConfigHandler;
+    private ShopConfigHandler shopConfigHandler;
     private MailHandler mailHandler;
-    private MinigameSettingsHandler minigameSettingsHandler;
     private PlayerData playerData;
-    private SettingsHandler settingsHandler;
 
     public static @NotNull CrossoverMain getInstance() {
         return JavaPlugin.getPlugin(CrossoverMain.class);
@@ -77,6 +80,7 @@ public final class CrossoverMain extends JavaPlugin {
         registerListeners();
         registerCommands();
         registerCurrencies();
+        ShopItem.register("custom", CustomShopItem::new);
         startTasks();
         initializeFeatures();
         new CrossoverPE().register();
@@ -88,27 +92,30 @@ public final class CrossoverMain extends JavaPlugin {
     }
 
     private void initializeHandlers() {
-        minigameSettingsHandler = new MinigameSettingsHandler(this);
+        settingsConfigHandler = new SettingsConfigHandler(this);
+        minigameConfigHandler = new MinigameConfigHandler(this);
+        shopConfigHandler = new ShopConfigHandler(this);
         playerData = new PlayerData(this);
         mailHandler = new MailHandler();
-        settingsHandler = new SettingsHandler(this);
     }
 
     private void registerListeners() {
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new InventoryListener(), this);
+        pluginManager.registerEvents(new MenuListener(), this);
         pluginManager.registerEvents(new PlayerJoin(this), this);
     }
 
     private void registerCommands() {
         new MainCommand(this).register("crossovermain");
         new LinkCommand(this).register("link");
+        new ShopCommand(this).register("shop");
         new UnlinkCommand(this).register("unlink");
     }
 
     private void registerCurrencies() {
-        new LocalCurrency("coins").register();
-        new LocalCurrency("money").register();
+        new CoinsCurrency().register();
+        new MoneyCurrency().register();
     }
 
     private void startTasks() {
@@ -145,11 +152,15 @@ public final class CrossoverMain extends JavaPlugin {
         return mailHandler;
     }
 
-    public MinigameSettingsHandler getMinigameSettingsHandler() {
-        return minigameSettingsHandler;
+    public MinigameConfigHandler getMinigameConfigHelper() {
+        return minigameConfigHandler;
     }
 
-    public SettingsHandler getSettingsHandler() {
-        return settingsHandler;
+    public SettingsConfigHandler getSettingsConfigHandler() {
+        return settingsConfigHandler;
+    }
+
+    public ShopConfigHandler getShopConfigHandler() {
+        return shopConfigHandler;
     }
 }

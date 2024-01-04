@@ -17,4 +17,8 @@ public final class Utils {
     public static void playSound(@NotNull Player player, @NotNull Sound sound) {
         player.playSound(player.getLocation(), sound, Float.MAX_VALUE, 1);
     }
+
+    public static @NotNull String placeholder(@NotNull String name) {
+        return '{' + name + '}';
+    }
 }

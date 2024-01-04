@@ -1,6 +1,6 @@
 package me.cable.crossover.main.task;
 
-import me.cable.crossover.main.handler.Settings;
+import me.cable.crossover.main.handler.SettingsConfigHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -9,10 +9,10 @@ public class FallTeleportTask implements Runnable {
 
     @Override
     public void run() {
-        if (!Settings.get().fallTeleport_enabled()) return;
+        if (!SettingsConfigHandler.getConfig().fallTeleport_enabled()) return;
 
-        int yFrom = Settings.get().fallTeleport_yFrom();
-        int yTo = Settings.get().fallTeleport_yTo();
+        int yFrom = SettingsConfigHandler.getConfig().fallTeleport_yFrom();
+        int yTo = SettingsConfigHandler.getConfig().fallTeleport_yTo();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             Location loc = player.getLocation();

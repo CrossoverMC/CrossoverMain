@@ -42,7 +42,7 @@ public class CrossoverPE extends PlaceholderExpansion {
             Currency currency = Currency.getCurrencyIfExists(currencyId);
 
             if (currency != null) {
-                return currency.get(playerUuid).toPlainString();
+                return currency.format(currency.get(playerUuid), false);
             }
         }
 
