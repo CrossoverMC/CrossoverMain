@@ -1,25 +1,42 @@
 package me.cable.crossover.main.task;
 
 import me.cable.crossover.main.handler.SettingsConfigHandler;
+import me.cable.crossover.main.util.ConfigHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class FallTeleportTask implements Runnable {
 
+    public static final Map<Player, Location> lastGroundLocations = new HashMap<>();
+
     @Override
     public void run() {
-        if (!SettingsConfigHandler.getConfig().fallTeleport_enabled()) return;
+        ConfigHelper fallTeleportConfig = SettingsConfigHandler.getConfig().ch("fall-teleport");
 
-        int yFrom = SettingsConfigHandler.getConfig().fallTeleport_yFrom();
-        int yTo = SettingsConfigHandler.getConfig().fallTeleport_yTo();
+        for (World world : Bukkit.getWorlds()) {
+            Double tpy = fallTeleportConfig.doubIfSet(world.getName());
+            if (tpy == null) continue;
 
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            Location loc = player.getLocation();
+            for (Player player : world.getPlayers()) {
+                if (player.isOnGround()) {
+                    lastGroundLocations.put(player, player.getLocation());
+                }
 
-            if (loc.getY() <= yFrom) {
-                loc.setY(yTo);
-                player.teleport(loc);
+                Location loc = player.getLocation();
+                if (loc.getY() > tpy) continue;
+
+                Location tpLoc = lastGroundLocations.get(player);
+
+                if (tpLoc == null) {
+                    player.kickPlayer("You fell too far.");
+                } else {
+                    player.teleport(tpLoc);
+                }
             }
         }
     }

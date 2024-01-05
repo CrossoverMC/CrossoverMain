@@ -21,10 +21,9 @@ clutch-levels:
   2: "0.0,0.0,0.0,0.0,0.0"
   3: "0.0,0.0,0.0,0.0,0.0"
 
+# worlds and the teleport y level
 fall-teleport:
-  enabled: true
-  y-from: -200
-  y-to: 350
+  world: -100
 
 messages:
   artifact-find: # {artifact}
@@ -37,6 +36,10 @@ messages:
 reader:
   enabled: false
   file-path: ""
+
+spawn-location:
+  enabled: false
+  location: "world,0,100,0"
 
 velocity-blocks:
   "0,0,0": "0.0,0.0,0.0"

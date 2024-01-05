@@ -1,5 +1,6 @@
 package me.cable.crossover.main.util;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -73,6 +74,10 @@ public class ConfigHelper {
         return cs.getDouble(path, def);
     }
 
+    public @Nullable Double doubIfSet(@NotNull String path) {
+        return cs.isDouble(path) ? cs.getDouble(path) : null;
+    }
+
     public @NotNull BigDecimal bd(@NotNull String path) {
         return bd(path, BigDecimal.ZERO);
     }
@@ -135,11 +140,27 @@ public class ConfigHelper {
         return new ConfigHelper(csnn(path));
     }
 
+    public @Nullable Location loc(@NotNull String path) {
+        String[] parts = snn(path).split(",");
+        if (parts.length < 4) return null;
+
+        World world = Bukkit.getWorld(parts[0]);
+        float yaw = 0, pitch = 0;
+
+        if (parts.length == 6) {
+            yaw = Float.parseFloat(parts[4]);
+            pitch = Float.parseFloat(parts[5]);
+        }
+
+        return new Location(world, Double.parseDouble(parts[1]), Double.parseDouble(parts[2]),
+                Double.parseDouble(parts[3]), yaw, pitch);
+    }
+
     @Contract("_, !null -> !null")
     public @Nullable Location loc(@NotNull String path, @Nullable World world) {
         if (world == null) return null;
-        String[] parts = snn(path).split(",");
 
+        String[] parts = snn(path).split(",");
         float yaw = 0, pitch = 0;
 
         if (parts.length == 5) {

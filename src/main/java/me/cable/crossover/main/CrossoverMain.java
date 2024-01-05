@@ -19,9 +19,7 @@ import me.cable.crossover.main.features.clutch.ClutchListener;
 import me.cable.crossover.main.features.dohandler.DoHandler;
 import me.cable.crossover.main.features.highblock.HighblockPE;
 import me.cable.crossover.main.handler.*;
-import me.cable.crossover.main.listeners.InventoryListener;
-import me.cable.crossover.main.listeners.MenuListener;
-import me.cable.crossover.main.listeners.PlayerJoin;
+import me.cable.crossover.main.listeners.*;
 import me.cable.crossover.main.object.Minigame;
 import me.cable.crossover.main.papi.CrossoverPE;
 import me.cable.crossover.main.shop.CustomShopItem;
@@ -103,6 +101,8 @@ public final class CrossoverMain extends JavaPlugin {
         pluginManager.registerEvents(new InventoryListener(), this);
         pluginManager.registerEvents(new MenuListener(), this);
         pluginManager.registerEvents(new PlayerJoin(this), this);
+        pluginManager.registerEvents(new PlayerQuit(), this);
+        pluginManager.registerEvents(new PlayerChangedWorld(), this);
     }
 
     private void registerCommands() {
@@ -120,7 +120,7 @@ public final class CrossoverMain extends JavaPlugin {
 
     private void startTasks() {
         BukkitScheduler bukkitScheduler = getServer().getScheduler();
-        bukkitScheduler.scheduleSyncRepeatingTask(this, new FallTeleportTask(), 0, 10);
+        bukkitScheduler.scheduleSyncRepeatingTask(this, new FallTeleportTask(), 0, 2);
         bukkitScheduler.runTaskTimerAsynchronously(this, new Reader(this), 0, 20);
         bukkitScheduler.scheduleSyncRepeatingTask(this, new VelocityBlocksTask(), 0, 1);
     }
