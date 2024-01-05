@@ -87,6 +87,9 @@ public class ItemBuilder {
     public @NotNull ItemBuilder config(@NotNull ConfigHelper config) {
         this.config = config;
 
+        Integer headId = config.integerIfSet("hdb");
+        if (headId != null) hdb(headId);
+
         Material mat = config.mat("material", null);
         if (mat != null) material(mat);
 

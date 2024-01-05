@@ -5,6 +5,12 @@ artifacts-menu:
   items:
     artifact: # automaterial; {artifact}
       name: "&6&l{artifact}"
+    back:
+      material: ARROW
+      name: "&6&lBack"
+      lore:
+        - "&7Go back to the &eMain Menu"
+      slot: 36
     undiscovered: # automaterial; {artifact}
       material: BRICK
       name: "&c&l???"
@@ -24,6 +30,30 @@ clutch-levels:
 # worlds and their teleport y levels
 fall-teleport:
   world: -100.0
+
+main-menu:
+  title: "Your Stuff"
+  rows: 3
+  items:
+    artifacts:
+      material: BREWER_POTTERY_SHERD
+      name: "&6&lArtifacts"
+      slot: 11
+    pets:
+      hdb: 67567
+      name: "&6&lPets"
+      slot: 15
+    custom:
+      background:
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&a"
+        fill: true
+
+menu-item:
+  material: NETHER_STAR
+  name: "&6&lMain Menu"
+  lore:
+    - "&a&lRight-Click &7to open the Main Menu"
 
 messages:
   artifact-find: # {artifact}

@@ -13,6 +13,7 @@ public final class Constants {
 
     public static final NamespacedKey TOOL_KEY = createKey("tool");
 
+    public static final String TOOL_MAIN_MENU = "MAIN_MENU";
     public static final String TOOL_BOOTH = "BOOTH";
     public static final String TOOL_LARGE_JETPACK = "LARGE_JETPACK";
     public static final String TOOL_SMALL_JETPACK = "WEAK_JETPACK";

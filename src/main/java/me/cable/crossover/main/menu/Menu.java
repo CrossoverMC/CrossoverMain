@@ -28,7 +28,7 @@ import java.util.function.Supplier;
 
 public abstract class Menu implements InventoryHolder {
 
-    private static final NamespacedKey ITEM_KEY = new NamespacedKey(CrossoverMain.getInstance(), "menu");
+    protected final NamespacedKey itemKey = new NamespacedKey(CrossoverMain.getInstance(), "menu");
 
     private final Map<String, Supplier<String>> titlePlaceholders = new HashMap<>();
     private final Map<RenderPriority, List<Consumer<Inventory>>> renderers = new HashMap<>();
@@ -61,7 +61,7 @@ public abstract class Menu implements InventoryHolder {
     protected final void tag(@NotNull ItemStack item, @NotNull String value) {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
-        meta.getPersistentDataContainer().set(ITEM_KEY, PersistentDataType.STRING, value);
+        meta.getPersistentDataContainer().set(itemKey, PersistentDataType.STRING, value);
         item.setItemMeta(meta);
     }
 
@@ -120,7 +120,7 @@ public abstract class Menu implements InventoryHolder {
             ItemMeta meta = item.getItemMeta();
 
             if (meta != null) {
-                tag = meta.getPersistentDataContainer().get(ITEM_KEY, PersistentDataType.STRING);
+                tag = meta.getPersistentDataContainer().get(itemKey, PersistentDataType.STRING);
             }
         }
 

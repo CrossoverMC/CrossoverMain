@@ -1,10 +1,12 @@
 package me.cable.crossover.main.features.artifacts;
 
 import me.cable.crossover.main.handler.SettingsConfigHandler;
+import me.cable.crossover.main.menu.MainMenu;
 import me.cable.crossover.main.menu.Menu;
 import me.cable.crossover.main.util.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +17,7 @@ public class ArtifactMenu extends Menu {
 
     private static final String CONFIG_PATH = "artifacts-menu";
 
-    public ArtifactMenu(@NotNull Player player) {
+    public ArtifactMenu(@NotNull Player player, boolean showBack) {
         super(player);
 
         handleCustomItems(SettingsConfigHandler.getConfig().csnn(CONFIG_PATH + ".items.custom"));
@@ -37,6 +39,18 @@ public class ArtifactMenu extends Menu {
                         .create();
 
                 inv.setItem(slots.get(i), item);
+            }
+
+            if (showBack) {
+                new ItemBuilder().config(SettingsConfigHandler.getConfig().csnn(CONFIG_PATH + ".items.back"))
+                        .pd(itemKey, "BACK")
+                        .place(inv);
+            }
+        });
+
+        onClick((e, tag) -> {
+            if (e.getClick() == ClickType.LEFT && "BACK".equals(tag)) {
+                new MainMenu(player).open();
             }
         });
     }

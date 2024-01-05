@@ -21,7 +21,7 @@ public class ArtifactsCommand extends CustomCommand {
             return true;
         }
 
-        new ArtifactMenu(player).open();
+        new ArtifactMenu(player, false).open();
         return true;
     }
 }

@@ -75,7 +75,7 @@ public class ConfigHelper {
     }
 
     public @Nullable Double doubIfSet(@NotNull String path) {
-        return cs.isDouble(path) ? cs.getDouble(path) : null;
+        return cs.isSet(path) ? cs.getDouble(path) : null;
     }
 
     public @NotNull BigDecimal bd(@NotNull String path) {
