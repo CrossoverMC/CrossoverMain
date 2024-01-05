@@ -3,6 +3,7 @@ package me.cable.crossover.main.task;
 import me.cable.crossover.main.CrossoverMain;
 import me.cable.crossover.main.currency.Currency;
 import me.cable.crossover.main.handler.MailHandler;
+import me.cable.crossover.main.handler.SettingsConfigHandler;
 import me.cable.crossover.main.util.Color;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,6 +29,8 @@ public class Reader implements Runnable {
 
     @Override
     public void run() {
+        if (!SettingsConfigHandler.getConfig().bool("reader.enabled")) return;
+
         List<String> lines = readLines();
 
         for (String line : lines) {
@@ -49,7 +52,9 @@ public class Reader implements Runnable {
     }
 
     private @NotNull List<String> readLines() {
-        try (FileChannel fileChannel = FileChannel.open(Path.of("C:/Users/Zippy/Desktop/js-to-java.txt"),
+        String path = SettingsConfigHandler.getConfig().snn("reader.file-path");
+
+        try (FileChannel fileChannel = FileChannel.open(Path.of(path),
                 StandardOpenOption.READ, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
              FileLock ignored = fileChannel.lock()) {
             ByteBuffer byteBuffer = ByteBuffer.allocate(1024);

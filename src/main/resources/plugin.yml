@@ -9,6 +9,8 @@ depend:
   - "WorldGuard"
 
 commands:
+  artifacts:
+    permission: "crossovermain.command.artifacts"
   crossovermain:
     aliases: [ "cm" ]
     permission: "crossovermain.command.crossovermain"

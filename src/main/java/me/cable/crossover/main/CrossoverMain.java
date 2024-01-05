@@ -6,14 +6,12 @@ import com.sk89q.worldguard.protection.flags.StringFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.session.SessionManager;
-import me.cable.crossover.main.command.LinkCommand;
-import me.cable.crossover.main.command.MainCommand;
-import me.cable.crossover.main.command.ShopCommand;
-import me.cable.crossover.main.command.UnlinkCommand;
+import me.cable.crossover.main.command.*;
 import me.cable.crossover.main.currency.CoinsCurrency;
 import me.cable.crossover.main.currency.MoneyCurrency;
 import me.cable.crossover.main.features.antigravity.AntigravityHandler;
 import me.cable.crossover.main.features.antigravity.AntigravityListener;
+import me.cable.crossover.main.features.artifacts.ArtifactsHandler;
 import me.cable.crossover.main.features.booth.BoothHandler;
 import me.cable.crossover.main.features.booth.BoothListener;
 import me.cable.crossover.main.features.clutch.ClutchHandler;
@@ -29,6 +27,7 @@ import me.cable.crossover.main.papi.CrossoverPE;
 import me.cable.crossover.main.shop.CustomShopItem;
 import me.cable.crossover.main.shop.ShopItem;
 import me.cable.crossover.main.task.FallTeleportTask;
+import me.cable.crossover.main.task.Reader;
 import me.cable.crossover.main.task.VelocityBlocksTask;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -107,6 +106,7 @@ public final class CrossoverMain extends JavaPlugin {
     }
 
     private void registerCommands() {
+        new ArtifactsCommand(this).register("artifacts");
         new MainCommand(this).register("crossovermain");
         new LinkCommand(this).register("link");
         new ShopCommand(this).register("shop");
@@ -121,7 +121,7 @@ public final class CrossoverMain extends JavaPlugin {
     private void startTasks() {
         BukkitScheduler bukkitScheduler = getServer().getScheduler();
         bukkitScheduler.scheduleSyncRepeatingTask(this, new FallTeleportTask(), 0, 10);
-//        bukkitScheduler.runTaskTimerAsynchronously(this, new Reader(this), 0, 20);
+        bukkitScheduler.runTaskTimerAsynchronously(this, new Reader(this), 0, 20);
         bukkitScheduler.scheduleSyncRepeatingTask(this, new VelocityBlocksTask(), 0, 1);
     }
 
@@ -132,6 +132,9 @@ public final class CrossoverMain extends JavaPlugin {
         // antigravity
         pluginManager.registerEvents(new AntigravityListener(), this);
         sessionManager.registerHandler(AntigravityHandler.FACTORY, null);
+
+        // artifacts
+        pluginManager.registerEvents(new ArtifactsHandler(), this);
 
         // booth
         pluginManager.registerEvents(new BoothListener(), this);

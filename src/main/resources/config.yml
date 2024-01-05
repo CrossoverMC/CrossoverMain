@@ -1,3 +1,21 @@
+artifacts-menu:
+  title: "Your Artifacts"
+  rows: 5
+  slots: [ 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 30, 32 ] # should be 20
+  items:
+    artifact: # automaterial; {artifact}
+      name: "&6&l{artifact}"
+    undiscovered: # automaterial; {artifact}
+      material: BRICK
+      name: "&c&l???"
+      lore:
+        - "&7You have not found this artifact"
+    custom:
+      background:
+        material: "BLACK_STAINED_GLASS_PANE"
+        name: "&a"
+        fill: true
+
 clutch-levels:
   1: "0.0,0.0,0.0,0.0,0.0"
   2: "0.0,0.0,0.0,0.0,0.0"
@@ -7,6 +25,18 @@ fall-teleport:
   enabled: true
   y-from: -200
   y-to: 350
+
+messages:
+  artifact-find: # {artifact}
+    - "&aYou found the &6{artifact} &aartifact!"
+  artifact-duplicate: # {artifact}
+    - "&cYou have already found the {artifact} artifact!"
+  artifact-talk-to-archaeologist:
+    - "&6Talk to the archaeologist about this artifact."
+
+reader:
+  enabled: false
+  file-path: ""
 
 velocity-blocks:
   "0,0,0": "0.0,0.0,0.0"
