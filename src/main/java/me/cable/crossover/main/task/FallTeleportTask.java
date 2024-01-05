@@ -19,8 +19,10 @@ public class FallTeleportTask implements Runnable {
         ConfigHelper fallTeleportConfig = SettingsConfigHandler.getConfig().ch("fall-teleport");
 
         for (World world : Bukkit.getWorlds()) {
-            Double tpy = fallTeleportConfig.doubIfSet(world.getName());
-            if (tpy == null) continue;
+            String worldName = world.getName();
+            if (!fallTeleportConfig.isSet(worldName)) continue;
+
+            double tpy = fallTeleportConfig.doub(worldName);
 
             for (Player player : world.getPlayers()) {
                 if (player.isOnGround()) {
