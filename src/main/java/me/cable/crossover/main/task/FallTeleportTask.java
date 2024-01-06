@@ -55,6 +55,8 @@ public class FallTeleportTask implements Runnable {
                 if (tpLoc == null) {
                     player.kickPlayer("You fell too far.");
                 } else {
+                    tpLoc.setYaw(loc.getYaw());
+                    tpLoc.setPitch(loc.getPitch());
                     player.teleport(tpLoc);
                 }
             }
