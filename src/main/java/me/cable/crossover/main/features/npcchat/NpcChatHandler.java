@@ -58,7 +58,7 @@ public class NpcChatHandler implements Listener {
 
                 String message = lineSection.getString("message");
 
-                if (message != null) {
+                if (message != null && !message.isEmpty()) {
                     String line = lineFormat.replace(Utils.placeholder("message"), message)
                             .replace(Utils.placeholder("npc_name"), npc.getName());
                     player.sendMessage(StringUtils.format(line));

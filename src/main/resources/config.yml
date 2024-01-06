@@ -32,15 +32,30 @@ fall-teleport:
   world: -100.0
 
 inventory-items:
+  extra-lore:
+    amount: # {amount}
+      - "&e&lx{amount}"
+    equip:
+      - "&a&lClick &7to equip"
+    unequip:
+      - "&a&lClick &7to unequip"
+  highblock-buff:
+    material: INK_SAC
+    name: "&6&lPharaoh's Curse Buff"
+    lore:
+      - "&7Use to buff &eThe Pharaoh's Curse"
+      - "&7minigame by making blocks fall faster."
   sapphire:
     material: LAPIS_LAZULI
     name: "&6&lRare Sapphire"
+    lore:
+      - "&7A very rare artifact."
   travel-orb:
     material: ENDER_EYE
     name: "&6&lTravel Orb"
     lore:
       - "&7Use in &eEnd Portal Frames &7to"
-      - "&7instantly travel between them"
+      - "&7instantly travel between them."
 
 main-menu:
   title: "Your Stuff"

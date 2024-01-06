@@ -7,7 +7,6 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import me.cable.crossover.main.CrossoverMain;
 import me.cable.crossover.main.currency.Currency;
-import me.cable.crossover.main.features.artifacts.ArtifactsHandler;
 import me.cable.crossover.main.handler.ConfigHandler;
 import me.cable.crossover.main.handler.InventoryItems;
 import me.cable.crossover.main.handler.InventoryPlacers;
@@ -15,8 +14,8 @@ import me.cable.crossover.main.handler.MinigameConfigHandler;
 import me.cable.crossover.main.shop.Shop;
 import me.cable.crossover.main.util.Color;
 import me.cable.crossover.main.util.Rest;
+import me.cable.crossover.main.util.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -51,18 +50,6 @@ public class MainCommand extends CustomCommand {
         }
 
         switch (args[0]) {
-            case "a" -> {
-                if (!(sender instanceof Player player)) {
-                    sender.sendMessage(Color.ERROR + "Only players may use this command!");
-                    return true;
-                }
-
-                for (Material material : ArtifactsHandler.getArtifactTypes()) {
-                    ArtifactsHandler.addArtifact(player, material);
-                }
-
-                sender.sendMessage(Color.SUCCESS + "Added all artifacts to your inventory");
-            }
             case "currency" -> {
                 String usage = Color.ERROR + "Usage: /" + label + " currency get <player> <currency> OR /"
                         + label + " currency <add|remove|set> <player> <currency> <amount>";
@@ -146,7 +133,7 @@ public class MainCommand extends CustomCommand {
                 Player target = Bukkit.getPlayer(targetName);
 
                 if (target == null) {
-                    sender.sendMessage(Color.ERROR + "That player could not be found!");
+                    sender.sendMessage(Color.ERROR + "The target player could not be found!");
                     return true;
                 }
 
@@ -161,9 +148,9 @@ public class MainCommand extends CustomCommand {
 
                 if (args.length >= 5) {
                     try {
-                        amount = Math.max(Integer.parseInt(args[4]), 1);
+                        amount = Math.max(Integer.parseInt(args[4]), 0);
                     } catch (NumberFormatException ex) {
-                        sender.sendMessage(Color.ERROR + "That player could not be found!");
+                        sender.sendMessage(usage);
                         return true;
                     }
                 }
@@ -173,21 +160,24 @@ public class MainCommand extends CustomCommand {
                 switch (operation) {
                     case "give" -> {
                         inventoryItems.give(itemId, amount);
-                        InventoryPlacers.place(target);
+                        if (!Utils.hasBypass(target)) InventoryPlacers.place(target);
+
                         sender.sendMessage(Color.SUCCESS + "Gave " + Color.SPECIAL + amount + Color.SUCCESS + " of "
                                 + Color.SPECIAL + itemId + Color.SUCCESS + " to "
                                 + Color.SPECIAL + target.getName() + Color.SUCCESS + ".");
                     }
                     case "remove" -> {
                         inventoryItems.remove(itemId, amount);
-                        InventoryPlacers.place(target);
+                        if (!Utils.hasBypass(target)) InventoryPlacers.place(target);
+
                         sender.sendMessage(Color.SUCCESS + "Removed " + Color.SPECIAL + amount + Color.SUCCESS + " of "
                                 + Color.SPECIAL + itemId + Color.SUCCESS + " from "
                                 + Color.SPECIAL + target.getName() + Color.SUCCESS + ".");
                     }
                     case "set" -> {
                         inventoryItems.set(itemId, amount);
-                        InventoryPlacers.place(target);
+                        if (!Utils.hasBypass(target)) InventoryPlacers.place(target);
+
                         sender.sendMessage(Color.SUCCESS + "Set " + Color.SPECIAL + itemId + Color.SUCCESS + " amount to "
                                 + Color.SPECIAL + amount + Color.SUCCESS + " for "
                                 + Color.SPECIAL + target.getName() + Color.SUCCESS + ".");

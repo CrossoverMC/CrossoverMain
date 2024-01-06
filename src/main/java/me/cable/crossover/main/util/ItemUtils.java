@@ -7,6 +7,9 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class ItemUtils {
 
     public static void pd(@NotNull ItemStack item, @NotNull NamespacedKey key, @NotNull String str) {
@@ -26,5 +29,22 @@ public final class ItemUtils {
         if (item == null) return false;
         ItemMeta meta = item.getItemMeta();
         return meta != null && value.equals(meta.getPersistentDataContainer().get(key, PersistentDataType.STRING));
+    }
+
+    public static void appendLore(@NotNull ItemStack item, @NotNull List<String> lines, @NotNull List<String> spacer) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+
+        List<String> lore = meta.getLore();
+
+        if (lore == null) {
+            lore = new ArrayList<>();
+        } else if (!lore.isEmpty()) {
+            lore.addAll(spacer);
+        }
+
+        lore.addAll(lines);
+        meta.setLore(lore);
+        item.setItemMeta(meta);
     }
 }

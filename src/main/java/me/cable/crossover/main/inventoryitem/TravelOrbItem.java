@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 public class TravelOrbItem extends EquippableItem {
 
     public TravelOrbItem() {
-        super("travel-orb");
+        super("travel_orb");
     }
 
     @Override
