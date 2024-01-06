@@ -5,6 +5,7 @@ import me.cable.crossover.main.util.ConfigHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class FallTeleportTask implements Runnable {
             double tpy = fallTeleportConfig.doub(worldName);
 
             for (Player player : world.getPlayers()) {
-                if (player.isOnGround()) {
+                if (((Entity) player).isOnGround()) {
                     lastGroundLocations.put(player, player.getLocation());
                 }
 

@@ -6,7 +6,10 @@ import com.sk89q.worldguard.protection.flags.StringFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.session.SessionManager;
-import me.cable.crossover.main.command.*;
+import me.cable.crossover.main.command.ArtifactsCommand;
+import me.cable.crossover.main.command.LinkCommand;
+import me.cable.crossover.main.command.MainCommand;
+import me.cable.crossover.main.command.UnlinkCommand;
 import me.cable.crossover.main.features.antigravity.AntigravityHandler;
 import me.cable.crossover.main.features.antigravity.AntigravityListener;
 import me.cable.crossover.main.features.artifacts.ArtifactsHandler;
@@ -105,7 +108,6 @@ public final class CrossoverMain extends JavaPlugin {
         new ArtifactsCommand(this).register("artifacts");
         new MainCommand(this).register("crossovermain");
         new LinkCommand(this).register("link");
-        new ShopCommand(this).register("shop");
         new UnlinkCommand(this).register("unlink");
     }
 

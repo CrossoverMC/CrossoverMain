@@ -16,8 +16,8 @@ egypt0:
     ii:
       type: "custom"
       slot: 11
-      price: 10.0
       currency: "money"
+      price: 10.0
       item:
         material: DIRT
         name: "Dirt x1"

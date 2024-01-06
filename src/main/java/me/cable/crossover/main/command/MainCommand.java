@@ -8,12 +8,14 @@ import com.sk89q.worldguard.protection.regions.RegionContainer;
 import me.cable.crossover.main.CrossoverMain;
 import me.cable.crossover.main.currency.Currency;
 import me.cable.crossover.main.handler.*;
+import me.cable.crossover.main.shop.Shop;
 import me.cable.crossover.main.util.Color;
 import me.cable.crossover.main.util.Rest;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.jetbrains.annotations.NotNull;
@@ -189,6 +191,30 @@ public class MainCommand extends CustomCommand {
                 sender.sendMessage(Color.SUCCESS + "Configuration reloaded in "
                         + Color.SPECIAL + (System.currentTimeMillis() - millis) + Color.SUCCESS + " ms.");
             }
+            case "shop" -> {
+                if (args.length < 3) {
+                    sender.sendMessage(Color.ERROR + "Usage: /" + label + " shop <shop> <player>");
+                    return true;
+                }
+
+                String shopId = args[1];
+                ConfigurationSection shopCs = ShopConfigHandler.getConfig().cs(shopId);
+
+                if (shopCs == null) {
+                    sender.sendMessage(Color.ERROR + "Invalid shop " + shopId + "!");
+                    return true;
+                }
+
+                String targetName = args[2];
+                Player target = Bukkit.getPlayer(targetName);
+
+                if (target == null) {
+                    sender.sendMessage(Color.ERROR + "The target player could not be found!");
+                    return true;
+                }
+
+                new Shop(target, shopCs).open();
+            }
             case "updatebooths" -> {
                 StringBuilder sb = new StringBuilder();
 
@@ -251,7 +277,7 @@ public class MainCommand extends CustomCommand {
         List<String> list = new ArrayList<>();
 
         if (args.length == 1) {
-            for (String s : List.of("currency", "item", "reload", "updatebooths", "updateinv")) {
+            for (String s : List.of("currency", "item", "reload", "shop", "updatebooths", "updateinv")) {
                 if (s.startsWith(args[0])) {
                     list.add(s);
                 }
@@ -306,6 +332,26 @@ public class MainCommand extends CustomCommand {
                         for (String s : InventoryItems.getItemTypes()) {
                             if (s.startsWith(args[3])) {
                                 list.add(s);
+                            }
+                        }
+                    }
+                }
+            }
+            case "shop" -> {
+                switch (args.length) {
+                    case 2 -> {
+                        for (String a : ShopConfigHandler.getShopIds()) {
+                            if (a.startsWith(args[1])) {
+                                list.add(a);
+                            }
+                        }
+                    }
+                    case 3 -> {
+                        for (Player player : Bukkit.getOnlinePlayers()) {
+                            String name = player.getName();
+
+                            if (name.startsWith(args[2])) {
+                                list.add(name);
                             }
                         }
                     }
