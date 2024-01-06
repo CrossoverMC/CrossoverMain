@@ -5,15 +5,30 @@ import me.cable.crossover.main.util.ConfigHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Entity;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class FallTeleportTask implements Runnable {
 
     public static final Map<Player, Location> lastGroundLocations = new HashMap<>();
+
+    private boolean isSafeLoc(@NotNull Location loc) {
+        Block block = loc.getBlock().getRelative(BlockFace.DOWN);
+        if (block.getType().isAir()) return false;
+
+        for (BlockFace blockFace : List.of(BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST)) {
+            Block a = block.getRelative(blockFace);
+            if (a.getType().isAir()) return false;
+        }
+
+        return true;
+    }
 
     @Override
     public void run() {
@@ -26,12 +41,14 @@ public class FallTeleportTask implements Runnable {
             double tpy = fallTeleportConfig.doub(worldName);
 
             for (Player player : world.getPlayers()) {
-                if (((Entity) player).isOnGround()) {
-                    lastGroundLocations.put(player, player.getLocation());
-                }
-
                 Location loc = player.getLocation();
-                if (loc.getY() > tpy) continue;
+
+                if (isSafeLoc(loc)) {
+                    lastGroundLocations.put(player, loc);
+                }
+                if (loc.getY() > tpy) {
+                    continue;
+                }
 
                 Location tpLoc = lastGroundLocations.get(player);
 
