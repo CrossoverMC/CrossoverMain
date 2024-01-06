@@ -47,7 +47,7 @@ public class BoothHandler extends FlagValueChangeHandler<String> {
         player.getInventory().setItem(Constants.PRIMARY_SLOT, new ItemBuilder().material(Material.GRAY_DYE)
                 .name("&6&lJoin Booth Voice")
                 .lore("&a&lRight-Click &7to join this", "&7booth's &9Discord &7voice channel.")
-                .pd(Constants.TOOL_KEY, Constants.TOOL_BOOTH)
+                .pd(Constants.KEY_TOOL, Constants.TOOL_BOOTH)
                 .create());
     }
 

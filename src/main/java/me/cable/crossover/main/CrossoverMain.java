@@ -7,8 +7,6 @@ import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.session.SessionManager;
 import me.cable.crossover.main.command.*;
-import me.cable.crossover.main.currency.CoinsCurrency;
-import me.cable.crossover.main.currency.MoneyCurrency;
 import me.cable.crossover.main.features.antigravity.AntigravityHandler;
 import me.cable.crossover.main.features.antigravity.AntigravityListener;
 import me.cable.crossover.main.features.artifacts.ArtifactsHandler;
@@ -21,9 +19,7 @@ import me.cable.crossover.main.features.highblock.HighblockPE;
 import me.cable.crossover.main.handler.*;
 import me.cable.crossover.main.listeners.*;
 import me.cable.crossover.main.object.Minigame;
-import me.cable.crossover.main.papi.CrossoverPE;
-import me.cable.crossover.main.shop.CustomShopItem;
-import me.cable.crossover.main.shop.ShopItem;
+import me.cable.crossover.main.object.RegistryItems;
 import me.cable.crossover.main.task.FallTeleportTask;
 import me.cable.crossover.main.task.InventoryItemsTask;
 import me.cable.crossover.main.task.Reader;
@@ -77,11 +73,9 @@ public final class CrossoverMain extends JavaPlugin {
         initializeHandlers();
         registerListeners();
         registerCommands();
-        registerCurrencies();
         startTasks();
         initializeFeatures();
-        ShopItem.register("custom", CustomShopItem::new);
-        new CrossoverPE().register();
+        new RegistryItems().register();
     }
 
     @Override
@@ -113,11 +107,6 @@ public final class CrossoverMain extends JavaPlugin {
         new LinkCommand(this).register("link");
         new ShopCommand(this).register("shop");
         new UnlinkCommand(this).register("unlink");
-    }
-
-    private void registerCurrencies() {
-        new CoinsCurrency().register();
-        new MoneyCurrency().register();
     }
 
     private void startTasks() {

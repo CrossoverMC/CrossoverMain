@@ -4,6 +4,7 @@ import me.cable.crossover.main.CrossoverMain;
 import me.cable.crossover.main.util.YamlLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 public class PlayerData {
 

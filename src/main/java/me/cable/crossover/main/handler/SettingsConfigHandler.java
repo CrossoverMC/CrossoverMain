@@ -1,6 +1,7 @@
 package me.cable.crossover.main.handler;
 
 import me.cable.crossover.main.CrossoverMain;
+import me.cable.crossover.main.util.ConfigHelper;
 import me.cable.crossover.main.util.YamlLoader;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -10,6 +11,8 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 
 public class SettingsConfigHandler {
+
+    public static final String PATH_PLAYER_ITEMS = "player-items";
 
     private final CrossoverMain crossoverMain;
 
@@ -22,8 +25,8 @@ public class SettingsConfigHandler {
         load(null);
     }
 
-    public static @NotNull Settings getConfig() {
-        return new Settings(config);
+    public static @NotNull ConfigHelper getConfig() {
+        return new ConfigHelper(config);
     }
 
     public void load(@Nullable Player player) {

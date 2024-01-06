@@ -18,7 +18,7 @@ public class VelocityBlocksTask implements Runnable {
 
     @Override
     public void run() {
-        ConfigurationSection cs = SettingsConfigHandler.getConfig().velocityBlocks();
+        ConfigurationSection cs = SettingsConfigHandler.getConfig().csnn("velocity-blocks");
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (cooldowns.containsKey(player)) {

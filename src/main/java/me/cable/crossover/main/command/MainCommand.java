@@ -8,6 +8,7 @@ import com.sk89q.worldguard.protection.regions.RegionContainer;
 import me.cable.crossover.main.CrossoverMain;
 import me.cable.crossover.main.currency.Currency;
 import me.cable.crossover.main.handler.MinigameConfigHandler;
+import me.cable.crossover.main.handler.PlayerItems;
 import me.cable.crossover.main.handler.SettingsConfigHandler;
 import me.cable.crossover.main.handler.ShopConfigHandler;
 import me.cable.crossover.main.util.Color;
@@ -118,6 +119,59 @@ public class MainCommand extends CustomCommand {
                     default -> sender.sendMessage(usage);
                 }
             }
+            case "item" -> {
+                String usage = Color.ERROR + "Usage: /" + label + " item give <player> <item> [amount]";
+
+                if (args.length < 4) {
+                    sender.sendMessage(usage);
+                    return true;
+                }
+
+                String operation = args[1];
+                String targetName = args[2];
+                Player target = Bukkit.getPlayer(targetName);
+
+                if (target == null) {
+                    sender.sendMessage(Color.ERROR + "That player could not be found!");
+                    return true;
+                }
+
+                String itemId = args[3];
+
+                if (!PlayerItems.isValidItem(itemId)) {
+                    sender.sendMessage(Color.ERROR + "The item type " + itemId + " is invalid!");
+                    return true;
+                }
+
+                int amount = 1;
+
+                if (args.length >= 5) {
+                    try {
+                        amount = Math.max(Integer.parseInt(args[4]), 1);
+                    } catch (NumberFormatException ex) {
+                        sender.sendMessage(Color.ERROR + "That player could not be found!");
+                        return true;
+                    }
+                }
+
+                PlayerItems playerItems = PlayerItems.getPlayerItems(target);
+
+                switch (operation) {
+                    case "give" -> {
+                        playerItems.give(itemId, amount);
+                        sender.sendMessage(Color.SUCCESS + "Gave " + Color.SPECIAL + amount + Color.SUCCESS + " of "
+                                + Color.SPECIAL + itemId + Color.SUCCESS + " to "
+                                + Color.SPECIAL + target.getName() + Color.SUCCESS + ".");
+                    }
+                    case "remove" -> {
+                        playerItems.remove(itemId, amount);
+                        sender.sendMessage(Color.SUCCESS + "Removed " + Color.SPECIAL + amount + Color.SUCCESS + " of "
+                                + Color.SPECIAL + itemId + Color.SUCCESS + " from "
+                                + Color.SPECIAL + target.getName() + Color.SUCCESS + ".");
+                    }
+                    default -> sender.sendMessage(usage);
+                }
+            }
             case "reload" -> {
                 long millis = System.currentTimeMillis();
                 Player player = (sender instanceof Player p) ? p : null;
@@ -182,33 +236,62 @@ public class MainCommand extends CustomCommand {
         List<String> list = new ArrayList<>();
 
         if (args.length == 1) {
-            for (String s : List.of("currency", "reload", "updatebooths")) {
+            for (String s : List.of("currency", "item", "reload", "updatebooths")) {
                 if (s.startsWith(args[0])) {
                     list.add(s);
                 }
             }
-        } else if (args[0].equals("currency")) { // cm currency add CableXD money 10
-            switch (args.length) {
-                case 2 -> {
-                    for (String s : List.of("add", "get", "remove", "set")) {
-                        if (s.startsWith(args[1])) {
-                            list.add(s);
+        } else switch (args[0]) {
+            case "currency" -> {
+                switch (args.length) {
+                    case 2 -> {
+                        for (String s : List.of("add", "get", "remove", "set")) {
+                            if (s.startsWith(args[1])) {
+                                list.add(s);
+                            }
                         }
                     }
-                }
-                case 3 -> {
-                    for (Player player : Bukkit.getOnlinePlayers()) {
-                        String name = player.getName();
+                    case 3 -> {
+                        for (Player player : Bukkit.getOnlinePlayers()) {
+                            String name = player.getName();
 
-                        if (name.startsWith(args[2])) {
-                            list.add(name);
+                            if (name.startsWith(args[2])) {
+                                list.add(name);
+                            }
+                        }
+                    }
+                    case 4 -> {
+                        for (String currency : Currency.getCurrencies()) {
+                            if (currency.startsWith(args[3])) {
+                                list.add(currency);
+                            }
                         }
                     }
                 }
-                case 4 -> {
-                    for (String currency : Currency.getCurrencies()) {
-                        if (currency.startsWith(args[3])) {
-                            list.add(currency);
+            }
+            case "item" -> {
+                switch (args.length) {
+                    case 2 -> {
+                        for (String s : List.of("give", "remove")) {
+                            if (s.startsWith(args[1])) {
+                                list.add(s);
+                            }
+                        }
+                    }
+                    case 3 -> {
+                        for (Player player : Bukkit.getOnlinePlayers()) {
+                            String name = player.getName();
+
+                            if (name.startsWith(args[2])) {
+                                list.add(name);
+                            }
+                        }
+                    }
+                    case 4 -> {
+                        for (String s : PlayerItems.getItemTypes()) {
+                            if (s.startsWith(args[3])) {
+                                list.add(s);
+                            }
                         }
                     }
                 }

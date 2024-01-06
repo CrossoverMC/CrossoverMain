@@ -24,7 +24,7 @@ public class BoothListener implements Listener {
         if (!e.getAction().toString().startsWith("RIGHT_")) return;
 
         ItemStack item = e.getItem();
-        if (!ItemUtils.hasPersistentData(item, Constants.TOOL_KEY, Constants.TOOL_BOOTH)) return;
+        if (!ItemUtils.hasPersistentData(item, Constants.KEY_TOOL, Constants.TOOL_BOOTH)) return;
 
         e.setCancelled(true);
 

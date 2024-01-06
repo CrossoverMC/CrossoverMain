@@ -26,17 +26,17 @@ public class ClutchHandler implements DoModule {
         inventory.setItem(Constants.SECONDARY_SLOT, new ItemBuilder().material(Material.SOUL_TORCH)
                 .name("&b&lLevel 1")
                 .lore("&a&lRight-Click &7to go to this level.")
-                .pd(Constants.TOOL_KEY, Constants.TOOL_LEVEL_1)
+                .pd(Constants.KEY_TOOL, Constants.TOOL_LEVEL_1)
                 .create());
         inventory.setItem(Constants.TERTIARY_SLOT, new ItemBuilder().material(Material.TORCH)
                 .name("&6&lLevel 2")
                 .lore("&a&lRight-Click &7to go to this level.")
-                .pd(Constants.TOOL_KEY, Constants.TOOL_LEVEL_2)
+                .pd(Constants.KEY_TOOL, Constants.TOOL_LEVEL_2)
                 .create());
         inventory.setItem(Constants.QUATERNARY_SLOT, new ItemBuilder().material(Material.REDSTONE_TORCH)
                 .name("&c&lLevel 3")
                 .lore("&a&lRight-Click &7to go to this level.")
-                .pd(Constants.TOOL_KEY, Constants.TOOL_LEVEL_3)
+                .pd(Constants.KEY_TOOL, Constants.TOOL_LEVEL_3)
                 .create());
     }
 

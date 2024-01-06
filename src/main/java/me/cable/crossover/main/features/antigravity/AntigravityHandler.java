@@ -39,12 +39,12 @@ public class AntigravityHandler extends FlagValueChangeHandler<StateFlag.State> 
         player.getInventory().setItem(Constants.PRIMARY_SLOT, new ItemBuilder().material(Material.BRUSH)
                 .name("&6&lSmall Jetpack")
                 .lore("&a&lRight-Click &7to propel yourself.")
-                .pd(Constants.TOOL_KEY, Constants.TOOL_SMALL_JETPACK)
+                .pd(Constants.KEY_TOOL, Constants.TOOL_SMALL_JETPACK)
                 .create());
         player.getInventory().setItem(Constants.SECONDARY_SLOT, new ItemBuilder().material(Material.TORCHFLOWER)
                 .name("&9&lLarge Jetpack")
                 .lore("&a&lRight-Click &7to propel yourself.")
-                .pd(Constants.TOOL_KEY, Constants.TOOL_LARGE_JETPACK)
+                .pd(Constants.KEY_TOOL, Constants.TOOL_LARGE_JETPACK)
                 .create());
     }
 

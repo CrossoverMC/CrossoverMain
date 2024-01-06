@@ -11,7 +11,8 @@ public final class Constants {
     public static final int TERTIARY_SLOT = 2;
     public static final int QUATERNARY_SLOT = 3;
 
-    public static final NamespacedKey TOOL_KEY = createKey("tool");
+    public static final NamespacedKey KEY_PLAYER_ITEM = createKey("player-item");
+    public static final NamespacedKey KEY_TOOL = createKey("tool");
 
     public static final String TOOL_MAIN_MENU = "MAIN_MENU";
     public static final String TOOL_BOOTH = "BOOTH";

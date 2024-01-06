@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 public class ClutchListener implements Listener {
 
     private void teleport(@NotNull Player player, int level) {
-        Location levelLoc = SettingsConfigHandler.getConfig().clutchLevels_level(player.getWorld(), level);
+        Location levelLoc = SettingsConfigHandler.getConfig().loc("clutch-levels." + level, player.getWorld());
         player.teleport(levelLoc);
         ClutchHandler.clutchFailed.remove(player);
     }
@@ -66,7 +66,7 @@ public class ClutchListener implements Listener {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
 
-        String toolId = meta.getPersistentDataContainer().get(Constants.TOOL_KEY, PersistentDataType.STRING);
+        String toolId = meta.getPersistentDataContainer().get(Constants.KEY_TOOL, PersistentDataType.STRING);
         if (toolId == null) return;
 
         switch (toolId) {

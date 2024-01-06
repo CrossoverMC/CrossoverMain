@@ -22,7 +22,7 @@ public class AntigravityListener implements Listener {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
 
-        String data = meta.getPersistentDataContainer().get(Constants.TOOL_KEY, PersistentDataType.STRING);
+        String data = meta.getPersistentDataContainer().get(Constants.KEY_TOOL, PersistentDataType.STRING);
         if (data == null) return;
 
         Double multiplier = null;

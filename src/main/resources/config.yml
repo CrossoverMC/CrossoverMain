@@ -63,6 +63,17 @@ messages:
   artifact-talk-to-archaeologist:
     - "&6Talk to the archaeologist about this artifact."
 
+player-items:
+  sapphire:
+    material: LAPIS_LAZULI
+    name: "&6&lRare Sapphire"
+  travel-orb:
+    material: ENDER_EYE
+    name: "&6&lTravel Orb"
+    lore:
+      - "&7Use in &eEnd Portal Frames &7to"
+      - "&7instantly travel between them"
+
 reader:
   enabled: false
   file-path: ""
