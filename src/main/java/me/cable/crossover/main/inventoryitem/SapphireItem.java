@@ -1,4 +1,4 @@
-package me.cable.crossover.main.playeritem;
+package me.cable.crossover.main.inventoryitem;
 
 import me.cable.crossover.main.handler.SettingsConfigHandler;
 import me.cable.crossover.main.util.ItemBuilder;
@@ -15,7 +15,7 @@ public class SapphireItem extends EquippableItem {
     @Override
     public @NotNull ItemStack createItem(@NotNull Player player) {
         return new ItemBuilder()
-                .config(SettingsConfigHandler.getConfig().csnn(SettingsConfigHandler.PATH_PLAYER_ITEMS + ".sapphire"))
+                .config(SettingsConfigHandler.getConfig().csnn(SettingsConfigHandler.PATH_INVENTORY_ITEMS + ".sapphire"))
                 .create();
     }
 }

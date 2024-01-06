@@ -112,7 +112,7 @@ public final class CrossoverMain extends JavaPlugin {
     private void startTasks() {
         BukkitScheduler bukkitScheduler = getServer().getScheduler();
         bukkitScheduler.scheduleSyncRepeatingTask(this, new FallTeleportTask(), 0, 2);
-        bukkitScheduler.scheduleSyncRepeatingTask(this, new InventoryItemsTask(), 0, 5 * 20);
+        bukkitScheduler.scheduleSyncRepeatingTask(this, new InventoryItemsTask(), 0, 60 * 20);
         bukkitScheduler.runTaskTimerAsynchronously(this, new Reader(this), 0, 20);
         bukkitScheduler.scheduleSyncRepeatingTask(this, new VelocityBlocksTask(), 0, 1);
     }

@@ -31,6 +31,17 @@ clutch-levels:
 fall-teleport:
   world: -100.0
 
+inventory-items:
+  sapphire:
+    material: LAPIS_LAZULI
+    name: "&6&lRare Sapphire"
+  travel-orb:
+    material: ENDER_EYE
+    name: "&6&lTravel Orb"
+    lore:
+      - "&7Use in &eEnd Portal Frames &7to"
+      - "&7instantly travel between them"
+
 main-menu:
   title: "Your Stuff"
   rows: 3
@@ -63,17 +74,6 @@ messages:
   artifact-talk-to-archaeologist:
     - "&6Talk to the archaeologist about this artifact."
 
-player-items:
-  sapphire:
-    material: LAPIS_LAZULI
-    name: "&6&lRare Sapphire"
-  travel-orb:
-    material: ENDER_EYE
-    name: "&6&lTravel Orb"
-    lore:
-      - "&7Use in &eEnd Portal Frames &7to"
-      - "&7instantly travel between them"
-
 reader:
   enabled: false
   file-path: ""
@@ -81,6 +81,9 @@ reader:
 spawn-location:
   enabled: false
   location: "world,0.0,100.0,0.0,0.0,0.0"
+
+travel-frames:
+  "world,0,0,0": "world,0.0,0.0,0.0,0.0,0.0"
 
 velocity-blocks:
   "0,0,0": "0.0,0.0,0.0"

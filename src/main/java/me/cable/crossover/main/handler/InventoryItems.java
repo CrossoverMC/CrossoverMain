@@ -1,6 +1,6 @@
 package me.cable.crossover.main.handler;
 
-import me.cable.crossover.main.playeritem.ItemType;
+import me.cable.crossover.main.inventoryitem.InventoryItem;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -12,22 +12,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class PlayerItems {
+public class InventoryItems {
 
     private static final String PATH_ITEMS_EQUIPPED = "items.equipped";
     private static final String PATH_ITEMS_ITEMS = "items.items";
-    private static final Map<String, ItemType> itemTypes = new HashMap<>();
+    private static final Map<String, InventoryItem> itemTypes = new HashMap<>();
 
     private final ConfigurationSection itemsCs;
 
-    public static void registerItemType(@NotNull ItemType itemType) {
-        String id = itemType.getId();
+    public static void registerItemType(@NotNull InventoryItem inventoryItem) {
+        String id = inventoryItem.getId();
 
         if (itemTypes.containsKey(id)) {
             throw new IllegalStateException("An item type with the ID " + id + " has already been registered");
         }
 
-        itemTypes.put(id, itemType);
+        itemTypes.put(id, inventoryItem);
     }
 
     public static @NotNull List<String> getItemTypes() {
@@ -44,22 +44,22 @@ public class PlayerItems {
         }
     }
 
-    public static @NotNull PlayerItems getPlayerItems(@NotNull Player player) {
-        return new PlayerItems(PlayerData.get(player.getUniqueId()));
+    public static @NotNull InventoryItems get(@NotNull Player player) {
+        return new InventoryItems(PlayerData.get(player.getUniqueId()));
     }
 
-    public static @Nullable ItemType getItemType(@NotNull String itemType) {
+    public static @Nullable InventoryItem getItemType(@NotNull String itemType) {
         return itemTypes.get(itemType);
     }
 
-    public PlayerItems(@NotNull ConfigurationSection itemsCs) {
+    public InventoryItems(@NotNull ConfigurationSection itemsCs) {
         this.itemsCs = itemsCs;
     }
 
     public @NotNull Map<String, Integer> get() {
         Map<String, Integer> items = new HashMap<>();
 
-        for (Entry<String, ItemType> entry : itemTypes.entrySet()) {
+        for (Entry<String, InventoryItem> entry : itemTypes.entrySet()) {
             String itemId = entry.getKey();
             int amount = get(itemId);
 

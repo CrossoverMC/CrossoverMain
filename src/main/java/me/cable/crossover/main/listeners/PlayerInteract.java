@@ -1,9 +1,9 @@
 package me.cable.crossover.main.listeners;
 
-import me.cable.crossover.main.handler.PlayerItems;
+import me.cable.crossover.main.handler.InventoryItems;
 import me.cable.crossover.main.menu.MainMenu;
-import me.cable.crossover.main.playeritem.EquippableItem;
-import me.cable.crossover.main.playeritem.ItemType;
+import me.cable.crossover.main.inventoryitem.EquippableItem;
+import me.cable.crossover.main.inventoryitem.InventoryItem;
 import me.cable.crossover.main.util.Constants;
 import me.cable.crossover.main.util.ItemUtils;
 import org.bukkit.entity.Player;
@@ -32,9 +32,9 @@ public class PlayerInteract implements Listener {
             if (playerItemId != null) {
                 e.setCancelled(true);
 
-                ItemType itemType = PlayerItems.getItemType(playerItemId);
+                InventoryItem inventoryItem = InventoryItems.getItemType(playerItemId);
 
-                if (itemType instanceof EquippableItem equippableItem) {
+                if (inventoryItem instanceof EquippableItem equippableItem) {
                     equippableItem.onInteract(e);
                 }
             }

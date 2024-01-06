@@ -14,8 +14,12 @@ public final class Utils {
                 .hasBypass(WorldGuardPlugin.inst().wrapPlayer(player), BukkitAdapter.adapt(player.getWorld()));
     }
 
+    public static void playSound(@NotNull Player player, @NotNull Sound sound, float pitch) {
+        player.playSound(player.getLocation(), sound, Float.MAX_VALUE, pitch);
+    }
+
     public static void playSound(@NotNull Player player, @NotNull Sound sound) {
-        player.playSound(player.getLocation(), sound, Float.MAX_VALUE, 1);
+        playSound(player, sound, 1);
     }
 
     public static @NotNull String placeholder(@NotNull String name) {

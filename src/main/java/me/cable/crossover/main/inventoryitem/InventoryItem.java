@@ -1,21 +1,21 @@
-package me.cable.crossover.main.playeritem;
+package me.cable.crossover.main.inventoryitem;
 
-import me.cable.crossover.main.handler.PlayerItems;
+import me.cable.crossover.main.handler.InventoryItems;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class ItemType {
+public abstract class InventoryItem {
 
     private final String id;
 
-    public ItemType(@NotNull String id) {
+    public InventoryItem(@NotNull String id) {
         this.id = id;
     }
 
     public final void register() {
-        PlayerItems.registerItemType(this);
+        InventoryItems.registerItemType(this);
     }
 
     public abstract @NotNull ItemStack createItem(@NotNull Player player);

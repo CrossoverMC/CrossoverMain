@@ -12,7 +12,7 @@ import java.io.File;
 
 public class SettingsConfigHandler {
 
-    public static final String PATH_PLAYER_ITEMS = "player-items";
+    public static final String PATH_INVENTORY_ITEMS = "inventory-items";
 
     private final CrossoverMain crossoverMain;
 

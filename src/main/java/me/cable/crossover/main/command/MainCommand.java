@@ -7,10 +7,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import me.cable.crossover.main.CrossoverMain;
 import me.cable.crossover.main.currency.Currency;
-import me.cable.crossover.main.handler.MinigameConfigHandler;
-import me.cable.crossover.main.handler.PlayerItems;
-import me.cable.crossover.main.handler.SettingsConfigHandler;
-import me.cable.crossover.main.handler.ShopConfigHandler;
+import me.cable.crossover.main.handler.*;
 import me.cable.crossover.main.util.Color;
 import me.cable.crossover.main.util.Rest;
 import org.bukkit.Bukkit;
@@ -138,7 +135,7 @@ public class MainCommand extends CustomCommand {
 
                 String itemId = args[3];
 
-                if (!PlayerItems.isValidItem(itemId)) {
+                if (!InventoryItems.isValidItem(itemId)) {
                     sender.sendMessage(Color.ERROR + "The item type " + itemId + " is invalid!");
                     return true;
                 }
@@ -154,19 +151,28 @@ public class MainCommand extends CustomCommand {
                     }
                 }
 
-                PlayerItems playerItems = PlayerItems.getPlayerItems(target);
+                InventoryItems inventoryItems = InventoryItems.get(target);
 
                 switch (operation) {
                     case "give" -> {
-                        playerItems.give(itemId, amount);
+                        inventoryItems.give(itemId, amount);
+                        InventoryPlacers.place(target);
                         sender.sendMessage(Color.SUCCESS + "Gave " + Color.SPECIAL + amount + Color.SUCCESS + " of "
                                 + Color.SPECIAL + itemId + Color.SUCCESS + " to "
                                 + Color.SPECIAL + target.getName() + Color.SUCCESS + ".");
                     }
                     case "remove" -> {
-                        playerItems.remove(itemId, amount);
+                        inventoryItems.remove(itemId, amount);
+                        InventoryPlacers.place(target);
                         sender.sendMessage(Color.SUCCESS + "Removed " + Color.SPECIAL + amount + Color.SUCCESS + " of "
                                 + Color.SPECIAL + itemId + Color.SUCCESS + " from "
+                                + Color.SPECIAL + target.getName() + Color.SUCCESS + ".");
+                    }
+                    case "set" -> {
+                        inventoryItems.set(itemId, amount);
+                        InventoryPlacers.place(target);
+                        sender.sendMessage(Color.SUCCESS + "Set " + Color.SPECIAL + itemId + Color.SUCCESS + " amount to "
+                                + Color.SPECIAL + amount + Color.SUCCESS + " for "
                                 + Color.SPECIAL + target.getName() + Color.SUCCESS + ".");
                     }
                     default -> sender.sendMessage(usage);
@@ -225,6 +231,15 @@ public class MainCommand extends CustomCommand {
                     }
                 });
             }
+            case "updateinv" -> {
+                if (!(sender instanceof Player player)) {
+                    sender.sendMessage(Color.ERROR + "Only players may use this command!");
+                    return true;
+                }
+
+                InventoryPlacers.place(player);
+                sender.sendMessage(Color.SUCCESS + "Your inventory has been updated.");
+            }
             default -> sender.sendMessage(Color.ERROR + "Unknown sub-command!");
         }
 
@@ -236,7 +251,7 @@ public class MainCommand extends CustomCommand {
         List<String> list = new ArrayList<>();
 
         if (args.length == 1) {
-            for (String s : List.of("currency", "item", "reload", "updatebooths")) {
+            for (String s : List.of("currency", "item", "reload", "updatebooths", "updateinv")) {
                 if (s.startsWith(args[0])) {
                     list.add(s);
                 }
@@ -272,7 +287,7 @@ public class MainCommand extends CustomCommand {
             case "item" -> {
                 switch (args.length) {
                     case 2 -> {
-                        for (String s : List.of("give", "remove")) {
+                        for (String s : List.of("give", "remove", "set")) {
                             if (s.startsWith(args[1])) {
                                 list.add(s);
                             }
@@ -288,7 +303,7 @@ public class MainCommand extends CustomCommand {
                         }
                     }
                     case 4 -> {
-                        for (String s : PlayerItems.getItemTypes()) {
+                        for (String s : InventoryItems.getItemTypes()) {
                             if (s.startsWith(args[3])) {
                                 list.add(s);
                             }

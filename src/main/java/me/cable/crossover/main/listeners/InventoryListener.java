@@ -1,7 +1,7 @@
 package me.cable.crossover.main.listeners;
 
-import me.cable.crossover.main.handler.PlayerItems;
-import me.cable.crossover.main.playeritem.ItemType;
+import me.cable.crossover.main.handler.InventoryItems;
+import me.cable.crossover.main.inventoryitem.InventoryItem;
 import me.cable.crossover.main.util.Constants;
 import me.cable.crossover.main.util.ItemUtils;
 import me.cable.crossover.main.util.Utils;
@@ -29,10 +29,10 @@ public class InventoryListener implements Listener {
             return;
         }
 
-        ItemType itemType = PlayerItems.getItemType(playerItemId);
+        InventoryItem inventoryItem = InventoryItems.getItemType(playerItemId);
 
-        if (itemType != null) {
-            itemType.onClick(e);
+        if (inventoryItem != null) {
+            inventoryItem.onClick(e);
         }
     }
 

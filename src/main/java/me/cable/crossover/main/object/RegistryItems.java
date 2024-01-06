@@ -2,13 +2,13 @@ package me.cable.crossover.main.object;
 
 import me.cable.crossover.main.currency.CoinsCurrency;
 import me.cable.crossover.main.currency.MoneyCurrency;
+import me.cable.crossover.main.handler.InventoryItems;
 import me.cable.crossover.main.handler.InventoryPlacers;
-import me.cable.crossover.main.handler.PlayerItems;
 import me.cable.crossover.main.handler.SettingsConfigHandler;
+import me.cable.crossover.main.inventoryitem.InventoryItem;
+import me.cable.crossover.main.inventoryitem.SapphireItem;
+import me.cable.crossover.main.inventoryitem.TravelOrbItem;
 import me.cable.crossover.main.papi.CrossoverPE;
-import me.cable.crossover.main.playeritem.ItemType;
-import me.cable.crossover.main.playeritem.SapphireItem;
-import me.cable.crossover.main.playeritem.TravelOrbItem;
 import me.cable.crossover.main.shop.CustomShopItem;
 import me.cable.crossover.main.shop.ShopItem;
 import me.cable.crossover.main.util.Constants;
@@ -52,19 +52,19 @@ public class RegistryItems {
                     .create();
             inv.setItem(8, menuItem);
 
-            PlayerItems playerItems = PlayerItems.getPlayerItems(player);
-            String equippedItem = playerItems.getEquipped();
+            InventoryItems inventoryItems = InventoryItems.get(player);
+            String equippedItem = inventoryItems.getEquipped();
             int itemSlot = 9;
 
-            for (Entry<String, Integer> entry : playerItems.get().entrySet()) {
+            for (Entry<String, Integer> entry : inventoryItems.get().entrySet()) {
                 String itemId = entry.getKey();
                 int amount = entry.getValue();
 
-                ItemType itemType = PlayerItems.getItemType(itemId);
-                if (itemType == null) continue;
+                InventoryItem inventoryItem = InventoryItems.getItemType(itemId);
+                if (inventoryItem == null) continue;
 
-                ItemStack item = itemType.createItem(player);
-                item.setAmount(amount);
+                ItemStack item = inventoryItem.createItem(player);
+                item.setAmount(Math.min(amount, item.getType().getMaxStackSize()));
                 ItemUtils.pd(item, Constants.KEY_PLAYER_ITEM, itemId);
                 inv.setItem(itemId.equals(equippedItem) ? 7 : itemSlot++, item);
 
