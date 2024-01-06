@@ -2,7 +2,7 @@ package me.cable.crossover.main.listeners;
 
 import me.cable.crossover.main.CrossoverMain;
 import me.cable.crossover.main.handler.MailHandler;
-import me.cable.crossover.main.handler.SettingsConfigHandler;
+import me.cable.crossover.main.handler.ConfigHandler;
 import me.cable.crossover.main.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -24,8 +24,8 @@ public class PlayerJoin implements Listener {
         Player player = e.getPlayer();
         mailHandler.sendMail(player);
 
-        if (SettingsConfigHandler.getConfig().bool("spawn-location.enabled")) {
-            Location loc = SettingsConfigHandler.getConfig().loc("spawn-location.location");
+        if (ConfigHandler.settings().bool("spawn-location.enabled")) {
+            Location loc = ConfigHandler.settings().loc("spawn-location.location");
             if (loc != null) player.teleport(loc);
         }
         if (!Utils.hasBypass(player)) {

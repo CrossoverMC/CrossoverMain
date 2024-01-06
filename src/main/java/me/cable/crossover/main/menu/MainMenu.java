@@ -1,7 +1,7 @@
 package me.cable.crossover.main.menu;
 
 import me.cable.crossover.main.features.artifacts.ArtifactMenu;
-import me.cable.crossover.main.handler.SettingsConfigHandler;
+import me.cable.crossover.main.handler.ConfigHandler;
 import me.cable.crossover.main.util.ConfigHelper;
 import me.cable.crossover.main.util.ItemBuilder;
 import org.bukkit.entity.Player;
@@ -20,10 +20,10 @@ public class MainMenu extends Menu {
     public MainMenu(@NotNull Player player) {
         super(player);
 
-        handleCustomItems(SettingsConfigHandler.getConfig().csnn(CONFIG_PATH + ".items.custom"));
+        handleCustomItems(ConfigHandler.settings().csnn(CONFIG_PATH + ".items.custom"));
 
         render(inv -> {
-            ConfigHelper items = SettingsConfigHandler.getConfig().ch(CONFIG_PATH + ".items");
+            ConfigHelper items = ConfigHandler.settings().ch(CONFIG_PATH + ".items");
             new ItemBuilder().config(items.csnn("artifacts"))
                     .pd(itemKey, "ARTIFACTS")
                     .place(inv);
@@ -50,11 +50,11 @@ public class MainMenu extends Menu {
 
     @Override
     protected @NotNull String title() {
-        return SettingsConfigHandler.getConfig().snn(CONFIG_PATH + ".title");
+        return ConfigHandler.settings().snn(CONFIG_PATH + ".title");
     }
 
     @Override
     protected int rows() {
-        return SettingsConfigHandler.getConfig().integer(CONFIG_PATH + ".rows");
+        return ConfigHandler.settings().integer(CONFIG_PATH + ".rows");
     }
 }

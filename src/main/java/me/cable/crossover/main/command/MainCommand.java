@@ -7,11 +7,16 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import me.cable.crossover.main.CrossoverMain;
 import me.cable.crossover.main.currency.Currency;
-import me.cable.crossover.main.handler.*;
+import me.cable.crossover.main.features.artifacts.ArtifactsHandler;
+import me.cable.crossover.main.handler.ConfigHandler;
+import me.cable.crossover.main.handler.InventoryItems;
+import me.cable.crossover.main.handler.InventoryPlacers;
+import me.cable.crossover.main.handler.MinigameConfigHandler;
 import me.cable.crossover.main.shop.Shop;
 import me.cable.crossover.main.util.Color;
 import me.cable.crossover.main.util.Rest;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -28,15 +33,13 @@ import java.util.UUID;
 
 public class MainCommand extends CustomCommand {
 
-    private final SettingsConfigHandler settingsConfigHandler;
+    private final ConfigHandler configHandler;
     private final MinigameConfigHandler minigameConfigHandler;
-    private final ShopConfigHandler shopConfigHandler;
 
     public MainCommand(@NotNull CrossoverMain crossoverMain) {
         super(crossoverMain);
-        settingsConfigHandler = crossoverMain.getSettingsConfigHandler();
+        configHandler = crossoverMain.getConfigHandler();
         minigameConfigHandler = crossoverMain.getMinigameConfigHelper();
-        shopConfigHandler = crossoverMain.getShopConfigHandler();
     }
 
     @Override
@@ -48,6 +51,18 @@ public class MainCommand extends CustomCommand {
         }
 
         switch (args[0]) {
+            case "a" -> {
+                if (!(sender instanceof Player player)) {
+                    sender.sendMessage(Color.ERROR + "Only players may use this command!");
+                    return true;
+                }
+
+                for (Material material : ArtifactsHandler.getArtifactTypes()) {
+                    ArtifactsHandler.addArtifact(player, material);
+                }
+
+                sender.sendMessage(Color.SUCCESS + "Added all artifacts to your inventory");
+            }
             case "currency" -> {
                 String usage = Color.ERROR + "Usage: /" + label + " currency get <player> <currency> OR /"
                         + label + " currency <add|remove|set> <player> <currency> <amount>";
@@ -184,9 +199,8 @@ public class MainCommand extends CustomCommand {
                 long millis = System.currentTimeMillis();
                 Player player = (sender instanceof Player p) ? p : null;
 
-                settingsConfigHandler.load(player);
+                configHandler.load(player);
                 minigameConfigHandler.load(player);
-                shopConfigHandler.load(player);
 
                 sender.sendMessage(Color.SUCCESS + "Configuration reloaded in "
                         + Color.SPECIAL + (System.currentTimeMillis() - millis) + Color.SUCCESS + " ms.");
@@ -198,7 +212,7 @@ public class MainCommand extends CustomCommand {
                 }
 
                 String shopId = args[1];
-                ConfigurationSection shopCs = ShopConfigHandler.getConfig().cs(shopId);
+                ConfigurationSection shopCs = ConfigHandler.shopSettings().cs(shopId);
 
                 if (shopCs == null) {
                     sender.sendMessage(Color.ERROR + "Invalid shop " + shopId + "!");
@@ -340,7 +354,7 @@ public class MainCommand extends CustomCommand {
             case "shop" -> {
                 switch (args.length) {
                     case 2 -> {
-                        for (String a : ShopConfigHandler.getShopIds()) {
+                        for (String a : ConfigHandler.getShopIds()) {
                             if (a.startsWith(args[1])) {
                                 list.add(a);
                             }

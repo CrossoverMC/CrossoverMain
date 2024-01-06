@@ -1,0 +1,32 @@
+line: "&f[&6{npc_name}&f]: {message}" # {message} {npc_name}
+
+period: 60
+
+template:
+  0:
+    commands: [ ] # {player}
+    message: "Hello!"
+    sounds: # "<sound>,<pitch>"
+      - "ENTITY_VILLAGER_AMBIENT,1.0"
+
+npcs:
+  archaeologist:
+    id: 0
+    # NPC tells player to find artifacts
+    collect: { }
+    # player has found all artifacts and receives artifact
+    collected: { }
+    # player talks to NPC after receiving artifact
+    after: { }
+
+  traveler:
+    id: 0
+    # NPC is still searching for item
+    searching: { }
+    # player gives NPC item
+    give: { }
+    # player talks to NPC after having given item
+    given: { }
+
+  custom:
+    npc-id: { }

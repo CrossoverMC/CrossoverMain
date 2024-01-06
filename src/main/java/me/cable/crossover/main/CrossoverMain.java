@@ -19,7 +19,11 @@ import me.cable.crossover.main.features.clutch.ClutchHandler;
 import me.cable.crossover.main.features.clutch.ClutchListener;
 import me.cable.crossover.main.features.dohandler.DoHandler;
 import me.cable.crossover.main.features.highblock.HighblockPE;
-import me.cable.crossover.main.handler.*;
+import me.cable.crossover.main.features.npcchat.NpcChatHandler;
+import me.cable.crossover.main.handler.ConfigHandler;
+import me.cable.crossover.main.handler.MailHandler;
+import me.cable.crossover.main.handler.MinigameConfigHandler;
+import me.cable.crossover.main.handler.PlayerData;
 import me.cable.crossover.main.listeners.*;
 import me.cable.crossover.main.object.Minigame;
 import me.cable.crossover.main.object.RegistryItems;
@@ -38,9 +42,8 @@ public final class CrossoverMain extends JavaPlugin {
     public static StringFlag BOOTH_FLAG;
     public static StringFlag DO_FLAG;
 
-    private SettingsConfigHandler settingsConfigHandler;
+    private ConfigHandler configHandler;
     private MinigameConfigHandler minigameConfigHandler;
-    private ShopConfigHandler shopConfigHandler;
     private MailHandler mailHandler;
     private PlayerData playerData;
 
@@ -87,9 +90,8 @@ public final class CrossoverMain extends JavaPlugin {
     }
 
     private void initializeHandlers() {
-        settingsConfigHandler = new SettingsConfigHandler(this);
+        configHandler = new ConfigHandler(this);
         minigameConfigHandler = new MinigameConfigHandler(this);
-        shopConfigHandler = new ShopConfigHandler(this);
         playerData = new PlayerData(this);
         mailHandler = new MailHandler();
     }
@@ -143,6 +145,9 @@ public final class CrossoverMain extends JavaPlugin {
 
         // highblock
         new HighblockPE().register();
+
+        // NPC chat
+        pluginManager.registerEvents(new NpcChatHandler(), this);
     }
 
     public MailHandler getMailHandler() {
@@ -153,11 +158,7 @@ public final class CrossoverMain extends JavaPlugin {
         return minigameConfigHandler;
     }
 
-    public SettingsConfigHandler getSettingsConfigHandler() {
-        return settingsConfigHandler;
-    }
-
-    public ShopConfigHandler getShopConfigHandler() {
-        return shopConfigHandler;
+    public ConfigHandler getConfigHandler() {
+        return configHandler;
     }
 }

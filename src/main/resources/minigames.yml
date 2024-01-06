@@ -4,7 +4,7 @@ settings:
   starting-message: # {time} {time_plural}
     - "&aStarting in &6{time} &asecond{time_plural}"
   waiting-message:
-    - "&cWaiting for players!"
+    - "&cWaiting for more players!"
   waiting-message-period: 10 # seconds
 
 minigame-settings-template:

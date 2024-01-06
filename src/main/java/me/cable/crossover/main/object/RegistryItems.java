@@ -4,7 +4,7 @@ import me.cable.crossover.main.currency.CoinsCurrency;
 import me.cable.crossover.main.currency.MoneyCurrency;
 import me.cable.crossover.main.handler.InventoryItems;
 import me.cable.crossover.main.handler.InventoryPlacers;
-import me.cable.crossover.main.handler.SettingsConfigHandler;
+import me.cable.crossover.main.handler.ConfigHandler;
 import me.cable.crossover.main.inventoryitem.InventoryItem;
 import me.cable.crossover.main.inventoryitem.SapphireItem;
 import me.cable.crossover.main.inventoryitem.TravelOrbItem;
@@ -47,7 +47,7 @@ public class RegistryItems {
 
         InventoryPlacers.register(player -> {
             Inventory inv = player.getInventory();
-            ItemStack menuItem = new ItemBuilder().config(SettingsConfigHandler.getConfig().csnn("menu-item"))
+            ItemStack menuItem = new ItemBuilder().config(ConfigHandler.settings().csnn("menu-item"))
                     .pd(Constants.KEY_TOOL, Constants.TOOL_MAIN_MENU)
                     .create();
             inv.setItem(8, menuItem);

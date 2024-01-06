@@ -3,7 +3,7 @@ package me.cable.crossover.main.task;
 import me.cable.crossover.main.CrossoverMain;
 import me.cable.crossover.main.currency.Currency;
 import me.cable.crossover.main.handler.MailHandler;
-import me.cable.crossover.main.handler.SettingsConfigHandler;
+import me.cable.crossover.main.handler.ConfigHandler;
 import me.cable.crossover.main.util.Color;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +29,7 @@ public class Reader implements Runnable {
 
     @Override
     public void run() {
-        if (!SettingsConfigHandler.getConfig().bool("reader.enabled")) return;
+        if (!ConfigHandler.settings().bool("reader.enabled")) return;
 
         List<String> lines = readLines();
 
@@ -52,7 +52,7 @@ public class Reader implements Runnable {
     }
 
     private @NotNull List<String> readLines() {
-        String path = SettingsConfigHandler.getConfig().snn("reader.file-path");
+        String path = ConfigHandler.settings().snn("reader.file-path");
 
         try (FileChannel fileChannel = FileChannel.open(Path.of(path),
                 StandardOpenOption.READ, StandardOpenOption.WRITE, StandardOpenOption.CREATE);

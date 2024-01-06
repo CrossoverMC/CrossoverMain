@@ -1,6 +1,6 @@
 package me.cable.crossover.main.task;
 
-import me.cable.crossover.main.handler.SettingsConfigHandler;
+import me.cable.crossover.main.handler.ConfigHandler;
 import me.cable.crossover.main.util.ConfigHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -17,7 +17,7 @@ public class FallTeleportTask implements Runnable {
 
     @Override
     public void run() {
-        ConfigHelper fallTeleportConfig = SettingsConfigHandler.getConfig().ch("fall-teleport");
+        ConfigHelper fallTeleportConfig = ConfigHandler.settings().ch("fall-teleport");
 
         for (World world : Bukkit.getWorlds()) {
             String worldName = world.getName();

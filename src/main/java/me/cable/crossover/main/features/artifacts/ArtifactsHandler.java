@@ -1,7 +1,7 @@
 package me.cable.crossover.main.features.artifacts;
 
 import me.cable.crossover.main.handler.PlayerData;
-import me.cable.crossover.main.handler.SettingsConfigHandler;
+import me.cable.crossover.main.handler.ConfigHandler;
 import org.apache.commons.text.WordUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -14,14 +14,16 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
 public class ArtifactsHandler implements Listener {
 
     public static final String PLAYER_DATA_PATH_ARTIFACTS_COLLECTION = "egypt-artifacts.collection";
-    public static final String PLAYER_DATA_PATH_ARTIFACTS_INITIATED = "egypt-artifacts.initiated"; // if players can collect shards
+    public static final String PLAYER_DATA_PATH_ARTIFACTS_STATE = "egypt-artifacts.state"; // progression through story
 
     private static boolean isValidArtifactType(@NotNull Material material) {
         return material.toString().endsWith("_POTTERY_SHERD");
@@ -31,6 +33,11 @@ public class ArtifactsHandler implements Listener {
         if (!isValidArtifactType(material)) {
             throw new IllegalArgumentException("Invalid artifact type " + material);
         }
+    }
+
+    public static @NotNull List<Material> getArtifactTypes() {
+        return Arrays.stream(Material.values())
+                .filter(m -> m.toString().endsWith("_POTTERY_SHERD")).toList();
     }
 
     public static boolean hasArtifact(@NotNull Player player, @NotNull Material material) {
@@ -43,6 +50,19 @@ public class ArtifactsHandler implements Listener {
         return playerData.getStringList(PLAYER_DATA_PATH_ARTIFACTS_COLLECTION).contains(artifact);
     }
 
+    public static boolean hasAllArtifacts(@NotNull Player player) {
+        int amount = 0;
+        List<Material> artifactTypes = getArtifactTypes();
+
+        for (Material material : artifactTypes) {
+            if (hasArtifact(player, material)) {
+                amount++;
+            }
+        }
+
+        return amount >= artifactTypes.size();
+    }
+
     public static @NotNull String getArtifactName(@NotNull Material material) {
         checkArtifactType(material);
         String artifactName = material.toString();
@@ -50,7 +70,7 @@ public class ArtifactsHandler implements Listener {
                 .toLowerCase(Locale.ROOT).replaceAll("_", " "));
     }
 
-    private static boolean addArtifact(@NotNull Player player, @NotNull Material material) {
+    public static boolean addArtifact(@NotNull Player player, @NotNull Material material) {
         checkArtifactType(material);
 
         String artifact = material.toString();
@@ -68,12 +88,16 @@ public class ArtifactsHandler implements Listener {
         return true;
     }
 
-    private static boolean isInitiated(@NotNull Player player) {
-        return PlayerData.get(player.getUniqueId()).getBoolean(PLAYER_DATA_PATH_ARTIFACTS_INITIATED);
+    public static @Nullable String getState(@NotNull Player player) {
+        return PlayerData.get(player.getUniqueId()).getString(PLAYER_DATA_PATH_ARTIFACTS_STATE);
     }
 
-    private static void setInitiated(@NotNull Player player, boolean initiated) {
-        PlayerData.get(player.getUniqueId()).set(PLAYER_DATA_PATH_ARTIFACTS_INITIATED, initiated);
+    public static void setState(@NotNull Player player, @Nullable String state) {
+        if (state != null && !List.of("COLLECTING", "COLLECTED").contains(state)) {
+            throw new IllegalArgumentException("Invalid state: " + state);
+        }
+
+        PlayerData.get(player.getUniqueId()).set(PLAYER_DATA_PATH_ARTIFACTS_STATE, state);
     }
 
     @EventHandler
@@ -88,15 +112,16 @@ public class ArtifactsHandler implements Listener {
 
         Player player = e.getPlayer();
 
-        if (!isInitiated(player)) {
-            SettingsConfigHandler.getConfig().message("messages.artifact-talk-to-archaeologist").send(player);
+        if (getState(player) == null) {
+            ConfigHandler.settings().message(ConfigHandler.PATH_MESSAGES + ".artifact-talk-to-archaeologist").send(player);
             return;
         }
 
         String artifactName = getArtifactName(type);
         boolean addSuccess = addArtifact(player, type);
 
-        SettingsConfigHandler.getConfig().message("messages." + (addSuccess ? "artifact-find" : "artifact-duplicate"))
+        ConfigHandler.settings().message(ConfigHandler.PATH_MESSAGES + "."
+                        + (addSuccess ? "artifact-find" : "artifact-duplicate"))
                 .placeholder("artifact", artifactName)
                 .send(player);
     }

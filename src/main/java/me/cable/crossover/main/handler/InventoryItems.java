@@ -15,7 +15,7 @@ import java.util.Map.Entry;
 public class InventoryItems {
 
     private static final String PATH_ITEMS_EQUIPPED = "items.equipped";
-    private static final String PATH_ITEMS_ITEMS = "items.items";
+    private static final String PATH_ITEMS_INVENTORY = "items.inventory";
     private static final Map<String, InventoryItem> itemTypes = new HashMap<>();
 
     private final ConfigurationSection itemsCs;
@@ -73,24 +73,24 @@ public class InventoryItems {
 
     public int get(@NotNull String itemId) {
         checkItemType(itemId);
-        return itemsCs.getInt(PATH_ITEMS_ITEMS + "." + itemId);
+        return itemsCs.getInt(PATH_ITEMS_INVENTORY + "." + itemId);
     }
 
     public void set(@NotNull String itemId, int amount) {
-        itemsCs.set(PATH_ITEMS_ITEMS + "." + itemId, amount);
+        itemsCs.set(PATH_ITEMS_INVENTORY + "." + itemId, amount);
     }
 
     public void give(@NotNull String itemId, int amount) {
         checkItemType(itemId);
 
-        int currentAmount = itemsCs.getInt(PATH_ITEMS_ITEMS + "." + itemId);
-        itemsCs.set(PATH_ITEMS_ITEMS + "." + itemId, currentAmount + amount);
+        int currentAmount = itemsCs.getInt(PATH_ITEMS_INVENTORY + "." + itemId);
+        itemsCs.set(PATH_ITEMS_INVENTORY + "." + itemId, currentAmount + amount);
     }
 
     public void remove(@NotNull String itemId, int amount) {
         checkItemType(itemId);
-        int newAmount = itemsCs.getInt(PATH_ITEMS_ITEMS + "." + itemId) - amount;
-        itemsCs.set(PATH_ITEMS_ITEMS + "." + itemId, (newAmount > 0) ? newAmount : null);
+        int newAmount = itemsCs.getInt(PATH_ITEMS_INVENTORY + "." + itemId) - amount;
+        itemsCs.set(PATH_ITEMS_INVENTORY + "." + itemId, (newAmount > 0) ? newAmount : null);
     }
 
     public @Nullable String getEquipped() {

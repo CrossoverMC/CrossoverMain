@@ -2,7 +2,7 @@ package me.cable.crossover.main.inventoryitem;
 
 import me.cable.crossover.main.handler.InventoryItems;
 import me.cable.crossover.main.handler.InventoryPlacers;
-import me.cable.crossover.main.handler.SettingsConfigHandler;
+import me.cable.crossover.main.handler.ConfigHandler;
 import me.cable.crossover.main.util.ConfigHelper;
 import me.cable.crossover.main.util.ItemBuilder;
 import me.cable.crossover.main.util.Utils;
@@ -24,7 +24,7 @@ public class TravelOrbItem extends EquippableItem {
     @Override
     public @NotNull ItemStack createItem(@NotNull Player player) {
         return new ItemBuilder()
-                .config(SettingsConfigHandler.getConfig().csnn(SettingsConfigHandler.PATH_INVENTORY_ITEMS + ".travel-orb"))
+                .config(ConfigHandler.settings().csnn(ConfigHandler.PATH_INVENTORY_ITEMS + ".travel-orb"))
                 .create();
     }
 
@@ -35,7 +35,7 @@ public class TravelOrbItem extends EquippableItem {
         Block block = e.getClickedBlock();
         if (block == null) return;
 
-        ConfigHelper travelFrames = SettingsConfigHandler.getConfig().ch("travel-frames");
+        ConfigHelper travelFrames = ConfigHandler.settings().ch("travel-frames");
         String blockLoc = block.getWorld().getName() + "," + block.getX() + "," + block.getY() + "," + block.getZ();
 
         for (String key : travelFrames.getKeys(false)) {

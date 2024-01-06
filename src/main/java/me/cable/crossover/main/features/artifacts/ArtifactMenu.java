@@ -1,6 +1,6 @@
 package me.cable.crossover.main.features.artifacts;
 
-import me.cable.crossover.main.handler.SettingsConfigHandler;
+import me.cable.crossover.main.handler.ConfigHandler;
 import me.cable.crossover.main.menu.MainMenu;
 import me.cable.crossover.main.menu.Menu;
 import me.cable.crossover.main.util.ItemBuilder;
@@ -10,7 +10,6 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class ArtifactMenu extends Menu {
@@ -20,12 +19,11 @@ public class ArtifactMenu extends Menu {
     public ArtifactMenu(@NotNull Player player, boolean showBack) {
         super(player);
 
-        handleCustomItems(SettingsConfigHandler.getConfig().csnn(CONFIG_PATH + ".items.custom"));
+        handleCustomItems(ConfigHandler.settings().csnn(CONFIG_PATH + ".items.custom"));
 
         render(inv -> {
-            List<Integer> slots = SettingsConfigHandler.getConfig().intList(CONFIG_PATH + ".slots");
-            List<Material> artifacts = Arrays.stream(Material.values())
-                    .filter(m -> m.toString().endsWith("_POTTERY_SHERD")).toList();
+            List<Integer> slots = ConfigHandler.settings().intList(CONFIG_PATH + ".slots");
+            List<Material> artifacts = ArtifactsHandler.getArtifactTypes();
 
             for (int i = 0; i < Math.min(slots.size(), artifacts.size()); i++) {
                 Material artifact = artifacts.get(i);
@@ -34,7 +32,7 @@ public class ArtifactMenu extends Menu {
                 boolean hasArtifact = ArtifactsHandler.hasArtifact(player, artifact);
                 ItemStack item = new ItemBuilder()
                         .material(artifact)
-                        .config(SettingsConfigHandler.getConfig().csnn(CONFIG_PATH + ".items." + (hasArtifact ? "artifact" : "undiscovered")))
+                        .config(ConfigHandler.settings().csnn(CONFIG_PATH + ".items." + (hasArtifact ? "artifact" : "undiscovered")))
                         .placeholder("artifact", artifactName)
                         .create();
 
@@ -42,7 +40,7 @@ public class ArtifactMenu extends Menu {
             }
 
             if (showBack) {
-                new ItemBuilder().config(SettingsConfigHandler.getConfig().csnn(CONFIG_PATH + ".items.back"))
+                new ItemBuilder().config(ConfigHandler.settings().csnn(CONFIG_PATH + ".items.back"))
                         .pd(itemKey, "BACK")
                         .place(inv);
             }
@@ -57,11 +55,11 @@ public class ArtifactMenu extends Menu {
 
     @Override
     protected @NotNull String title() {
-        return SettingsConfigHandler.getConfig().snn(CONFIG_PATH + ".title");
+        return ConfigHandler.settings().snn(CONFIG_PATH + ".title");
     }
 
     @Override
     protected int rows() {
-        return SettingsConfigHandler.getConfig().integer(CONFIG_PATH + ".rows");
+        return ConfigHandler.settings().integer(CONFIG_PATH + ".rows");
     }
 }
