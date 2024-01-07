@@ -122,6 +122,10 @@ public class ConfigHelper {
         return mat(path, Material.AIR);
     }
 
+    public @NotNull SoundEffect sound(@NotNull String path) {
+        return SoundEffect.of(snn(path));
+    }
+
     public boolean isCs(@NotNull String path) {
         return cs.isConfigurationSection(path);
     }

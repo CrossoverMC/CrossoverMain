@@ -16,19 +16,19 @@ import me.cable.crossover.main.util.Utils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-public class AntigravityHandler extends FlagValueChangeHandler<StateFlag.State> {
+public class AntigravityFlagHandler extends FlagValueChangeHandler<StateFlag.State> {
 
     public static final Factory FACTORY = new Factory();
 
-    public static class Factory extends Handler.Factory<AntigravityHandler> {
+    public static class Factory extends Handler.Factory<AntigravityFlagHandler> {
 
         @Override
-        public AntigravityHandler create(Session session) {
-            return new AntigravityHandler(session);
+        public AntigravityFlagHandler create(Session session) {
+            return new AntigravityFlagHandler(session);
         }
     }
 
-    public AntigravityHandler(Session session) {
+    public AntigravityFlagHandler(Session session) {
         super(session, CrossoverMain.ANTIGRAVITY_FLAG);
     }
 

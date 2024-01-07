@@ -18,22 +18,22 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public class BoothHandler extends FlagValueChangeHandler<String> {
+public class BoothFlagHandler extends FlagValueChangeHandler<String> {
 
     public static final Factory FACTORY = new Factory();
 
-    public static class Factory extends Handler.Factory<BoothHandler> {
+    public static class Factory extends Handler.Factory<BoothFlagHandler> {
 
         @Override
-        public BoothHandler create(Session session) {
-            return new BoothHandler(session);
+        public BoothFlagHandler create(Session session) {
+            return new BoothFlagHandler(session);
         }
     }
 
     public static final Map<Player, String> playerBooths = new HashMap<>();
     public static final List<Player> potentiallyConnected = new ArrayList<>();
 
-    public BoothHandler(Session session) {
+    public BoothFlagHandler(Session session) {
         super(session, CrossoverMain.BOOTH_FLAG);
     }
 

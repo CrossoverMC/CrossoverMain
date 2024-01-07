@@ -25,8 +25,11 @@ public class RegistryItems {
     }
 
     private void registerItemTypes() {
+        new FourCornersMobsBuffItem().register();
+        new FourCornersTntBuffItem().register();
         new HighblockBuffItem().register();
         new SapphireItem().register();
+        new SpeedBoostItem().register();
         new TravelOrbItem().register();
     }
 

@@ -16,17 +16,17 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DoHandler extends FlagValueChangeHandler<String> {
+public class DoFlagHandler extends FlagValueChangeHandler<String> {
 
     private static final Map<String, DoModule> modules = new HashMap<>();
 
     public static final Factory FACTORY = new Factory();
 
-    public static class Factory extends Handler.Factory<DoHandler> {
+    public static class Factory extends Handler.Factory<DoFlagHandler> {
 
         @Override
-        public DoHandler create(Session session) {
-            return new DoHandler(session);
+        public DoFlagHandler create(Session session) {
+            return new DoFlagHandler(session);
         }
     }
 
@@ -34,7 +34,7 @@ public class DoHandler extends FlagValueChangeHandler<String> {
         modules.put(type, doModule);
     }
 
-    public DoHandler(Session session) {
+    public DoFlagHandler(Session session) {
         super(session, CrossoverMain.DO_FLAG);
     }
 

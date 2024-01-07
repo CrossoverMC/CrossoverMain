@@ -8,11 +8,11 @@ import me.cable.crossover.main.CrossoverMain;
 import me.cable.crossover.main.handler.ConfigHandler;
 import me.cable.crossover.main.util.Color;
 import me.cable.crossover.main.util.Constants;
+import me.cable.crossover.main.util.SoundEffect;
 import me.cable.crossover.main.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Waterlogged;
 import org.bukkit.entity.Player;
@@ -124,7 +124,7 @@ public class ClutchListener implements Listener {
             }
             if (!ClutchHandler.clutchFailed.contains(player)) {
                 // clutched successfully
-                Utils.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP);
+                SoundEffect.SUCCESS.play(player);
             }
 
             teleport(player, savedLevel);

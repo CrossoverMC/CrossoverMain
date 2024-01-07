@@ -5,12 +5,12 @@ import me.cable.crossover.main.features.artifacts.ArtifactsHandler;
 import me.cable.crossover.main.handler.ConfigHandler;
 import me.cable.crossover.main.handler.InventoryItems;
 import me.cable.crossover.main.inventoryitem.SapphireItem;
+import me.cable.crossover.main.util.SoundEffect;
 import me.cable.crossover.main.util.StringUtils;
 import me.cable.crossover.main.util.Utils;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -67,15 +67,7 @@ public class NpcChatHandler implements Listener {
                 List<String> sounds = lineSection.getStringList("sounds");
 
                 for (String soundString : sounds) {
-                    String[] parts = soundString.split(",");
-
-                    try {
-                        Sound sound = Sound.valueOf(parts[0]);
-                        float pitch = Float.parseFloat(parts[1]);
-                        Utils.playSound(player, sound, pitch);
-                    } catch (IllegalArgumentException | ArrayIndexOutOfBoundsException ex) {
-                        // ignored
-                    }
+                    SoundEffect.of(soundString).play(player);
                 }
             }
         }.runTaskTimer(CrossoverMain.getInstance(), 0, ConfigHandler.npcChatSettings().integer("period"));

@@ -1,6 +1,7 @@
 package me.cable.crossover.main;
 
 import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.flags.DoubleFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.StringFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
@@ -10,20 +11,22 @@ import me.cable.crossover.main.command.ArtifactsCommand;
 import me.cable.crossover.main.command.LinkCommand;
 import me.cable.crossover.main.command.MainCommand;
 import me.cable.crossover.main.command.UnlinkCommand;
-import me.cable.crossover.main.features.antigravity.AntigravityHandler;
+import me.cable.crossover.main.features.antigravity.AntigravityFlagHandler;
 import me.cable.crossover.main.features.antigravity.AntigravityListener;
 import me.cable.crossover.main.features.artifacts.ArtifactsHandler;
-import me.cable.crossover.main.features.booth.BoothHandler;
+import me.cable.crossover.main.features.booth.BoothFlagHandler;
 import me.cable.crossover.main.features.booth.BoothListener;
 import me.cable.crossover.main.features.clutch.ClutchHandler;
 import me.cable.crossover.main.features.clutch.ClutchListener;
-import me.cable.crossover.main.features.dohandler.DoHandler;
+import me.cable.crossover.main.features.dohandler.DoFlagHandler;
 import me.cable.crossover.main.features.highblock.HighblockPE;
 import me.cable.crossover.main.features.npcchat.NpcChatHandler;
+import me.cable.crossover.main.features.playerspeed.WalkSpeedFlagHandler;
 import me.cable.crossover.main.handler.ConfigHandler;
 import me.cable.crossover.main.handler.MailHandler;
 import me.cable.crossover.main.handler.MinigameConfigHandler;
 import me.cable.crossover.main.handler.PlayerData;
+import me.cable.crossover.main.inventoryitem.SpeedBoostItem;
 import me.cable.crossover.main.listeners.*;
 import me.cable.crossover.main.object.Minigame;
 import me.cable.crossover.main.object.RegistryItems;
@@ -41,6 +44,7 @@ public final class CrossoverMain extends JavaPlugin {
     public static StateFlag ANTIGRAVITY_FLAG;
     public static StringFlag BOOTH_FLAG;
     public static StringFlag DO_FLAG;
+    public static DoubleFlag WALK_SPEED_FLAG;
 
     private ConfigHandler configHandler;
     private MinigameConfigHandler minigameConfigHandler;
@@ -68,6 +72,9 @@ public final class CrossoverMain extends JavaPlugin {
 
             DO_FLAG = new StringFlag("do");
             flagRegistry.register(DO_FLAG);
+
+            WALK_SPEED_FLAG = new DoubleFlag("crossover-walk-speed");
+            flagRegistry.register(WALK_SPEED_FLAG);
         } catch (FlagConflictException e) {
             e.printStackTrace();
         }
@@ -86,6 +93,7 @@ public final class CrossoverMain extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        SpeedBoostItem.saveSpeedBoosts();
         playerData.saveAll();
     }
 
@@ -127,27 +135,30 @@ public final class CrossoverMain extends JavaPlugin {
 
         // antigravity
         pluginManager.registerEvents(new AntigravityListener(), this);
-        sessionManager.registerHandler(AntigravityHandler.FACTORY, null);
+        sessionManager.registerHandler(AntigravityFlagHandler.FACTORY, null);
 
         // artifacts
         pluginManager.registerEvents(new ArtifactsHandler(), this);
 
         // booth
         pluginManager.registerEvents(new BoothListener(), this);
-        sessionManager.registerHandler(BoothHandler.FACTORY, null);
+        sessionManager.registerHandler(BoothFlagHandler.FACTORY, null);
 
         // clutch
         pluginManager.registerEvents(new ClutchListener(), this);
-        DoHandler.registerModule(ClutchHandler.TYPE, new ClutchHandler());
+        DoFlagHandler.registerModule(ClutchHandler.TYPE, new ClutchHandler());
 
         // do
-        sessionManager.registerHandler(DoHandler.FACTORY, null);
+        sessionManager.registerHandler(DoFlagHandler.FACTORY, null);
 
         // highblock
         new HighblockPE().register();
 
         // NPC chat
         pluginManager.registerEvents(new NpcChatHandler(), this);
+
+        // player speed
+        sessionManager.registerHandler(WalkSpeedFlagHandler.FACTORY, null);
     }
 
     public MailHandler getMailHandler() {

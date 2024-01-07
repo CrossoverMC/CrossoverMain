@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -148,6 +149,10 @@ public class ItemBuilder {
 
             PersistentDataContainer pdc = meta.getPersistentDataContainer();
             stringPersistentData.forEach((key, val) -> pdc.set(key, PersistentDataType.STRING, val));
+
+            if (config != null && config.bool("flags")) {
+                meta.addItemFlags(ItemFlag.values());
+            }
 
             item.setItemMeta(meta);
         }

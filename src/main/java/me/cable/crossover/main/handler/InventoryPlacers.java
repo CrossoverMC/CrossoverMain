@@ -1,6 +1,7 @@
 package me.cable.crossover.main.handler;
 
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -16,8 +17,11 @@ public final class InventoryPlacers {
     }
 
     public static void place(@NotNull Player player) {
-        player.getInventory().clear();
+        Inventory inv = player.getInventory();
 
+        for (int i = 5; i < inv.getSize(); i++) {
+            inv.setItem(i, null);
+        }
         for (Consumer<Player> placer : placers) {
             placer.accept(player);
         }

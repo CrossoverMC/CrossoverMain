@@ -29,7 +29,7 @@ public class BoothListener implements Listener {
         e.setCancelled(true);
 
         Player player = e.getPlayer();
-        String currentBooth = BoothHandler.playerBooths.get(player);
+        String currentBooth = BoothFlagHandler.playerBooths.get(player);
         if (currentBooth == null) return;
 
         Long lastConnection = lastConnections.get(player);
@@ -40,7 +40,7 @@ public class BoothListener implements Listener {
         }
 
         player.sendMessage("Joining voice channel, please wait...");
-        BoothHandler.potentiallyConnected.add(player);
+        BoothFlagHandler.potentiallyConnected.add(player);
         lastConnections.put(player, System.currentTimeMillis());
 
         // join voice
@@ -52,7 +52,7 @@ public class BoothListener implements Listener {
                         case "not_linked" ->
                                 player.sendMessage(Color.ERROR + "Could not put you into the booth's Discord voice channel because your account is not linked to a Discord account!");
                         case "success" -> {
-                            if (BoothHandler.potentiallyConnected.contains(player)) {
+                            if (BoothFlagHandler.potentiallyConnected.contains(player)) {
                                 player.sendMessage(Color.SUCCESS + "You are now in this booth's Discord voice channel.");
                                 player.getInventory().setItem(Constants.PRIMARY_SLOT, new ItemBuilder().material(Material.LIME_DYE)
                                         .name("&a&lIn Voice")

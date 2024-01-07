@@ -3,6 +3,7 @@ package me.cable.crossover.main.listeners;
 import me.cable.crossover.main.CrossoverMain;
 import me.cable.crossover.main.handler.MailHandler;
 import me.cable.crossover.main.handler.ConfigHandler;
+import me.cable.crossover.main.inventoryitem.SpeedBoostItem;
 import me.cable.crossover.main.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -22,6 +23,7 @@ public class PlayerJoin implements Listener {
     @EventHandler
     public void event(@NotNull PlayerJoinEvent e) {
         Player player = e.getPlayer();
+        SpeedBoostItem.onPlayerJoin(player);
         mailHandler.sendMail(player);
 
         if (ConfigHandler.settings().bool("spawn-location.enabled")) {

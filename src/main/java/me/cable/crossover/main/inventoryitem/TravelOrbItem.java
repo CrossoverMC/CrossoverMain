@@ -1,11 +1,11 @@
 package me.cable.crossover.main.inventoryitem;
 
+import me.cable.crossover.main.handler.ConfigHandler;
 import me.cable.crossover.main.handler.InventoryItems;
 import me.cable.crossover.main.handler.InventoryPlacers;
-import me.cable.crossover.main.handler.ConfigHandler;
 import me.cable.crossover.main.util.ConfigHelper;
 import me.cable.crossover.main.util.ItemBuilder;
-import me.cable.crossover.main.util.Utils;
+import me.cable.crossover.main.util.SoundEffect;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -17,8 +17,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class TravelOrbItem extends EquippableItem {
 
+    public static final String ID = "travel_orb";
+
     public TravelOrbItem() {
-        super("travel_orb");
+        super(ID);
     }
 
     @Override
@@ -35,6 +37,10 @@ public class TravelOrbItem extends EquippableItem {
         Block block = e.getClickedBlock();
         if (block == null) return;
 
+        Player player = e.getPlayer();
+        InventoryItems inventoryItems = InventoryItems.get(player);
+        if (inventoryItems.get(ID) <= 0) return;
+
         ConfigHelper travelFrames = ConfigHandler.settings().ch("travel-frames");
         String blockLoc = block.getWorld().getName() + "," + block.getX() + "," + block.getY() + "," + block.getZ();
 
@@ -43,11 +49,10 @@ public class TravelOrbItem extends EquippableItem {
                 Location tpLoc = travelFrames.loc(key);
 
                 if (tpLoc != null) {
-                    Player player = e.getPlayer();
                     player.teleport(tpLoc);
-                    Utils.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 1.7f);
+                    new SoundEffect(Sound.ENTITY_ENDERMAN_TELEPORT, 1.7f).play(player);
 
-                    InventoryItems.get(player).remove(getId(), 1);
+                    inventoryItems.remove(getId(), 1);
                     InventoryPlacers.place(player);
                 }
 

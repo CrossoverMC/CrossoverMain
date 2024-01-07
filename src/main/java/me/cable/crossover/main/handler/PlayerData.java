@@ -4,7 +4,6 @@ import me.cable.crossover.main.CrossoverMain;
 import me.cable.crossover.main.util.YamlLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -13,9 +12,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 public class PlayerData {
+
+    /* Keys
+        currencies
+        egypt-artifacts
+        items
+        pets
+        speed-boost
+     */
+
+    public static final String PATH_SPEED_BOOST = "speed-boost";
 
     public static final int UNLOAD_TIME = 60; // seconds
     private static PlayerData instance;
