@@ -4,10 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Message {
 
@@ -33,7 +30,7 @@ public class Message {
         }
     }
 
-    public void send(@NotNull List<? extends CommandSender> list) {
+    public void send(@NotNull Collection<? extends CommandSender> list) {
         list.forEach(this::send);
     }
 }

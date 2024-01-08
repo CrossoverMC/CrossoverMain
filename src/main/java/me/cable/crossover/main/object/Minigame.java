@@ -9,6 +9,8 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,7 +19,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class Minigame {
+public abstract class Minigame implements Listener {
 
     private static final List<Minigame> registered = new ArrayList<>();
 
@@ -58,6 +60,7 @@ public abstract class Minigame {
                     }
                     if (minigame.countdown <= 0) {
                         getGlobalMinigameSettings().message("start-message").send(players);
+                        Bukkit.getPluginManager().registerEvents(minigame, CrossoverMain.getInstance());
                         minigame.startGame(players);
                         minigame.gameRunning = true;
                     } else if (minigame.countdown % 10 == 0 || minigame.countdown <= 5) {
@@ -99,6 +102,12 @@ public abstract class Minigame {
     }
 
     public static void unregisterAll() {
+        for (Minigame minigame : registered) {
+            if (minigame.gameRunning) {
+                minigame.endGame();
+            }
+        }
+
         registered.clear();
     }
 
@@ -165,6 +174,7 @@ public abstract class Minigame {
         }
 
         gameRunning = false;
+        HandlerList.unregisterAll(this);
         countdown = getCountdown();
         cleanup();
     }

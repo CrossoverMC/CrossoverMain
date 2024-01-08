@@ -5,6 +5,10 @@ teleport:
   regions: # regions in which players will be teleported
     - "world,0,0,0,0,0,0"
 
+show-paths:
+  enabled: false
+  material: BLACK_CONCRETE
+
 venues:
   0:
     world: "world"

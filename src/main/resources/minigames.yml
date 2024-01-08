@@ -38,6 +38,42 @@ minigames:
           material: SAND
           min-y: 0
           region: "0,0,0,0"
+
+  race:
+    settings:
+      messages:
+        finish: # {player} {time}
+          - "&6{player} &ahas finished with a time of &6{time}&a."
+        lap: # {lap} {previous_lap}
+          - "&aYou are on &6lap {lap}&a."
+        time-up:
+          - "&cYou ran out of time."
+    instances:
+      0:
+        countdown: 10
+        min-players: 1
+        waiting-region: "0,0,0,0,0,0"
+        world: "world"
+        minigame:
+          barriers:
+            - "0,0,0,0,0,0"
+          check-radius: 5.0 # distance away from finish line player must go before a lap is counted
+          end-location: "0.0,0.0,0.0,0.0,0.0"
+          finish-line: "0,0,0,0,0,0"
+          laps: 3
+          max-time: 12000
+          start-lights:
+            delay: 60
+            interval: 20
+            frames:
+              0:
+                lights:
+                  - "0,0,0"
+                sound: "BLOCK_NOTE_BLOCK_PLING,1.0"
+          start-location: "0.0,0.0,0.0,0.0,0.0"
+          teleport-regions:
+            "0,0,0,0,0,0": "0.0,0.0,0.0,0.0,0.0"
+
   spleef:
     settings:
       messages:

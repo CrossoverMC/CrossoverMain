@@ -2,6 +2,7 @@ package me.cable.crossover.main.handler;
 
 import me.cable.crossover.main.CrossoverMain;
 import me.cable.crossover.main.features.highblock.HighblockMinigame;
+import me.cable.crossover.main.features.race.RaceMinigame;
 import me.cable.crossover.main.features.spleef.SpleefMinigame;
 import me.cable.crossover.main.object.Minigame;
 import me.cable.crossover.main.util.ConfigHelper;
@@ -45,6 +46,7 @@ public class MinigameConfigHandler {
     private void loadInstances() {
         Map<String, Function<ConfigurationSection, Minigame>> map = Map.of(
                 "highblock", HighblockMinigame::new,
+                "race", RaceMinigame::new,
                 "spleef", SpleefMinigame::new
         );
 

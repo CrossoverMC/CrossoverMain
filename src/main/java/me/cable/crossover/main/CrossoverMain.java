@@ -93,6 +93,7 @@ public final class CrossoverMain extends JavaPlugin {
     @Override
     public void onDisable() {
         HiddenPathHandler.cleanup();
+        Minigame.unregisterAll();
         SpeedBoostItem.saveSpeedBoosts();
         leaderboardsHandler.save();
         playerData.saveAll();

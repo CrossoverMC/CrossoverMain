@@ -22,7 +22,7 @@ public class SpeedModifier {
         walkSpeedModifiers.removeIf(predicate);
     }
 
-    private static void updateSpeed(@NotNull Player player, boolean walk) {
+    public static void updateSpeed(@NotNull Player player, boolean walk) {
         List<SpeedModifier> playerModifiers = (walk ? walkSpeedModifiers : flySpeedModifiers).stream()
                 .filter(m -> m.getPlayer().equals(player))
                 .sorted((a, b) -> b.getPriority().ordinal() - a.getPriority().ordinal())

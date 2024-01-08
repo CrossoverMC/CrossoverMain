@@ -1,13 +1,15 @@
 package me.cable.crossover.main.listeners;
 
 import me.cable.crossover.main.CrossoverMain;
-import me.cable.crossover.main.handler.MailHandler;
+import me.cable.crossover.main.features.playerspeed.SpeedModifier;
 import me.cable.crossover.main.handler.ConfigHandler;
+import me.cable.crossover.main.handler.MailHandler;
 import me.cable.crossover.main.inventoryitem.SpeedBoostItem;
 import me.cable.crossover.main.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.jetbrains.annotations.NotNull;
@@ -33,5 +35,12 @@ public class PlayerJoin implements Listener {
         if (!Utils.hasBypass(player)) {
             player.getInventory().clear();
         }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void eventHighestPriority(@NotNull PlayerJoinEvent e) {
+        Player player = e.getPlayer();
+        SpeedModifier.updateSpeed(player, false);
+        SpeedModifier.updateSpeed(player, true);
     }
 }

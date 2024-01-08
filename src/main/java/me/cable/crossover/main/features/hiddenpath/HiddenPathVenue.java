@@ -65,10 +65,11 @@ public class HiddenPathVenue {
         startTime = System.currentTimeMillis();
         ConfigHandler.settings().message(ConfigHandler.PATH_MESSAGES + ".hidden-path-start").send(player);
 
-        // temp
-        for (Block block : path) {
-            if (block.getType() != Material.TARGET) {
-                block.setType(Material.BLACK_CONCRETE);
+        if (ConfigHandler.hiddenPathSettings().bool("show-paths.enabled")) {
+            Material material = ConfigHandler.hiddenPathSettings().mat("show-paths.material");
+
+            for (int i = 1; i < path.size(); i++) {
+                path.get(i).setType(material);
             }
         }
     }
