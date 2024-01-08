@@ -1,11 +1,12 @@
 package me.cable.crossover.main.util;
 
-import org.bukkit.Bukkit;
+import me.cable.crossover.main.object.Region;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -144,35 +145,26 @@ public class ConfigHelper {
         return new ConfigHelper(csnn(path));
     }
 
-    public @Nullable Location loc(@NotNull String path) {
+    public @NotNull Vector vec(@NotNull String path) {
         String[] parts = snn(path).split(",");
-        if (parts.length < 4) return null;
+        return (parts.length >= 3) ? new Vector(Double.parseDouble(parts[0]), Double.parseDouble(parts[1]),
+                Double.parseDouble(parts[2])) : new Vector();
+    }
 
-        World world = Bukkit.getWorld(parts[0]);
-        float yaw = 0, pitch = 0;
-
-        if (parts.length == 6) {
-            yaw = Float.parseFloat(parts[4]);
-            pitch = Float.parseFloat(parts[5]);
-        }
-
-        return new Location(world, Double.parseDouble(parts[1]), Double.parseDouble(parts[2]),
-                Double.parseDouble(parts[3]), yaw, pitch);
+    public @Nullable Location loc(@NotNull String path) {
+        return Utils.locFromString(snn(path));
     }
 
     @Contract("_, !null -> !null")
     public @Nullable Location loc(@NotNull String path, @Nullable World world) {
-        if (world == null) return null;
+        return Utils.locFromString(snn(path), world);
+    }
 
-        String[] parts = snn(path).split(",");
-        float yaw = 0, pitch = 0;
+    public @NotNull Region reg(@NotNull String path, @NotNull String worldName) {
+        return Region.of(snn(path), worldName);
+    }
 
-        if (parts.length == 5) {
-            yaw = Float.parseFloat(parts[3]);
-            pitch = Float.parseFloat(parts[4]);
-        }
-
-        return new Location(world, Double.parseDouble(parts[0]), Double.parseDouble(parts[1]),
-                Double.parseDouble(parts[2]), yaw, pitch);
+    public @NotNull Region reg(@NotNull String path) {
+        return Region.of(snn(path));
     }
 }

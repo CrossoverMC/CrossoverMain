@@ -19,13 +19,11 @@ import me.cable.crossover.main.features.booth.BoothListener;
 import me.cable.crossover.main.features.clutch.ClutchHandler;
 import me.cable.crossover.main.features.clutch.ClutchListener;
 import me.cable.crossover.main.features.dohandler.DoFlagHandler;
+import me.cable.crossover.main.features.hiddenpath.HiddenPathHandler;
 import me.cable.crossover.main.features.highblock.HighblockPE;
 import me.cable.crossover.main.features.npcchat.NpcChatHandler;
 import me.cable.crossover.main.features.playerspeed.WalkSpeedFlagHandler;
-import me.cable.crossover.main.handler.ConfigHandler;
-import me.cable.crossover.main.handler.MailHandler;
-import me.cable.crossover.main.handler.MinigameConfigHandler;
-import me.cable.crossover.main.handler.PlayerData;
+import me.cable.crossover.main.handler.*;
 import me.cable.crossover.main.inventoryitem.SpeedBoostItem;
 import me.cable.crossover.main.listeners.*;
 import me.cable.crossover.main.object.Minigame;
@@ -48,6 +46,7 @@ public final class CrossoverMain extends JavaPlugin {
 
     private ConfigHandler configHandler;
     private MinigameConfigHandler minigameConfigHandler;
+    private LeaderboardsHandler leaderboardsHandler;
     private MailHandler mailHandler;
     private PlayerData playerData;
 
@@ -93,13 +92,16 @@ public final class CrossoverMain extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        HiddenPathHandler.cleanup();
         SpeedBoostItem.saveSpeedBoosts();
+        leaderboardsHandler.save();
         playerData.saveAll();
     }
 
     private void initializeHandlers() {
         configHandler = new ConfigHandler(this);
         minigameConfigHandler = new MinigameConfigHandler(this);
+        leaderboardsHandler = new LeaderboardsHandler(this);
         playerData = new PlayerData(this);
         mailHandler = new MailHandler();
     }
@@ -150,6 +152,9 @@ public final class CrossoverMain extends JavaPlugin {
 
         // do
         sessionManager.registerHandler(DoFlagHandler.FACTORY, null);
+
+        // hidden path
+        HiddenPathHandler.initialize(this);
 
         // highblock
         new HighblockPE().register();

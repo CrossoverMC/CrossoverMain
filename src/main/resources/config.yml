@@ -105,6 +105,14 @@ messages:
     - "&cYou have already found the {artifact} artifact!"
   artifact-talk-to-archaeologist:
     - "&6Talk to the archaeologist about this artifact."
+  hidden-path-end:
+    - "&cYour game has been reset because you left the region."
+  hidden-path-finish: # {personal_best} {time}
+    - "&aComplete! Your time was &6{time}&a. Your personal best is &6{personal_best}&a."
+  hidden-path-finish-pb: # {previous_personal_best} {time}
+    - "&aComplete! You achieved a new personal best of &6{time}&a. Your previous personal best was &6{previous_personal_best}&a."
+  hidden-path-start:
+    - "&aYour time has started! Find the correct path and press the button in the middle."
   speed-boost-activate:
     - "&aActivated speed boost for &65 minutes&a."
   speed-boost-already-active:

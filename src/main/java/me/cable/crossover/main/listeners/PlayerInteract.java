@@ -1,9 +1,9 @@
 package me.cable.crossover.main.listeners;
 
 import me.cable.crossover.main.handler.InventoryItems;
-import me.cable.crossover.main.menu.MainMenu;
 import me.cable.crossover.main.inventoryitem.EquippableItem;
 import me.cable.crossover.main.inventoryitem.InventoryItem;
+import me.cable.crossover.main.menu.MainMenu;
 import me.cable.crossover.main.util.Constants;
 import me.cable.crossover.main.util.ItemUtils;
 import org.bukkit.entity.Player;

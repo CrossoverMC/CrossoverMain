@@ -21,6 +21,28 @@ public class Region {
     private final @NotNull String worldName;
     private final int minX, minY, minZ, maxX, maxY, maxZ;
 
+    public static @NotNull Region of(@NotNull String str, @NotNull String worldName) {
+        String[] parts = str.split(",");
+
+        if (parts.length < 6) {
+            throw new IllegalArgumentException("Too few parts");
+        }
+
+        return new Region(worldName, Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]),
+                Integer.parseInt(parts[3]), Integer.parseInt(parts[4]), Integer.parseInt(parts[5]));
+    }
+
+    public static @NotNull Region of(@NotNull String str) {
+        String[] parts = str.split(",");
+
+        if (parts.length < 7) {
+            throw new IllegalArgumentException("Too few parts");
+        }
+
+        return new Region(parts[0], Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Integer.parseInt(parts[3]),
+                Integer.parseInt(parts[4]), Integer.parseInt(parts[5]), Integer.parseInt(parts[6]));
+    }
+
     public Region(@NotNull String worldName, int x1, int y1, int z1, int x2, int y2, int z2) {
         this.worldName = worldName;
         minX = Math.min(x1, x2);

@@ -1,0 +1,22 @@
+teleport:
+  locations:
+    - "world,0.0,0.0,0.0"
+  material: CHISELED_SANDSTONE # players are teleported if on this material
+  regions: # regions in which players will be teleported
+    - "world,0,0,0,0,0,0"
+
+venues:
+  0:
+    world: "world"
+    direction: NORTH
+    start-block: "0,0,0"
+    distance: 10
+    space-left: 10
+    space-right: 10
+    finish-button: "0,0,0"
+    region: "0,0,0,0,0,0"
+    placements:
+      fix:
+        0: SANDSTONE
+      wrong:
+        0: LAVA

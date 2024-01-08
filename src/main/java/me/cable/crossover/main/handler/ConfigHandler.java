@@ -1,6 +1,7 @@
 package me.cable.crossover.main.handler;
 
 import me.cable.crossover.main.CrossoverMain;
+import me.cable.crossover.main.features.hiddenpath.HiddenPathHandler;
 import me.cable.crossover.main.util.ConfigHelper;
 import me.cable.crossover.main.util.YamlLoader;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -35,6 +36,10 @@ public class ConfigHandler {
         return getConfig("config.yml");
     }
 
+    public static @NotNull ConfigHelper hiddenPathSettings() {
+        return getConfig("hidden-paths.yml");
+    }
+
     public static @NotNull ConfigHelper npcChatSettings() {
         return getConfig("npc-chat.yml");
     }
@@ -48,11 +53,13 @@ public class ConfigHandler {
     }
 
     public void load(@Nullable Player player) {
-        for (String fileName : List.of("config", "npc-chat", "shops")) {
+        for (String fileName : List.of("config", "hidden-paths", "npc-chat", "shops")) {
             fileName += ".yml";
             YamlConfiguration config = new YamlLoader(fileName, crossoverMain).resource(crossoverMain)
                     .logger(crossoverMain).player(player).load().config();
             configs.put(fileName, config);
         }
+
+        HiddenPathHandler.load();
     }
 }
