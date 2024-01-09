@@ -5,6 +5,7 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -13,7 +14,19 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.UUID;
+
 public final class Utils {
+
+    public static @Nullable String playerNameFromUuid(@NotNull UUID playerUuid) {
+        for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
+            if (offlinePlayer.getUniqueId().equals(playerUuid)) {
+                return offlinePlayer.getName();
+            }
+        }
+
+        return null;
+    }
 
     public static boolean hasBypass(@NotNull Player player) {
         return WorldGuard.getInstance().getPlatform().getSessionManager()
@@ -89,10 +102,18 @@ public final class Utils {
                 Double.parseDouble(parts[2]), yaw, pitch);
     }
 
-    public static @NotNull String formatDuration(long milliseconds) {
+    public static @NotNull String formatDurationMillis(long milliseconds) {
         long minutes = (milliseconds / 1000) / 60;
         long seconds = (milliseconds / 1000) % 60;
         long millis = milliseconds % 1000;
         return minutes + "m:" + seconds + "s:" + millis + "ms";
+    }
+
+    public static @NotNull String formatDurationSeconds(int secs) {
+        long days = secs / (24 * 3600);
+        long hours = (secs % (24 * 3600)) / 3600;
+        long minutes = (secs % 3600) / 60;
+        long seconds = secs % 60;
+        return days + "d:" + hours + "h:" + minutes + "m:" + seconds + "s";
     }
 }

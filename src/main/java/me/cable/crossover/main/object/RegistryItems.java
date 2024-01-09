@@ -6,6 +6,7 @@ import me.cable.crossover.main.handler.ConfigHandler;
 import me.cable.crossover.main.handler.InventoryItems;
 import me.cable.crossover.main.handler.InventoryPlacers;
 import me.cable.crossover.main.inventoryitem.*;
+import me.cable.crossover.main.leaderboard.Leaderboard;
 import me.cable.crossover.main.papi.CrossoverPE;
 import me.cable.crossover.main.shop.CustomShopItem;
 import me.cable.crossover.main.shop.ShopItem;
@@ -46,6 +47,7 @@ public class RegistryItems {
         registerItemTypes();
         registerPlaceholderExpansions();
         registerShopItems();
+        Leaderboard.loadLeaderboards();
 
         InventoryPlacers.register(player -> {
             Inventory inv = player.getInventory();

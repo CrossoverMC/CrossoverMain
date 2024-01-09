@@ -74,6 +74,24 @@ inventory-items:
       - "&7Use in &eEnd Portal Frames &7to"
       - "&7instantly travel between them."
 
+# exclude: list of player UUIDs
+leaderboards:
+  format: "&6{pos}. &e{player} &7- &e{score}" # {player} {pos} {score}
+  per-page: 10
+  leaderboards:
+    donations:
+      location: "world,0.0,0.0,0.0"
+      title: "Top Donors"
+      exclude: []
+    hidden-path:
+      location: "world,0.0,0.0,0.0"
+      title: "Hidden Path Quickest Times"
+      exclude: []
+    playtime:
+      location: "world,0.0,0.0,0.0"
+      title: "Total Playtime"
+      exclude: []
+
 main-menu:
   title: "Your Stuff"
   rows: 3

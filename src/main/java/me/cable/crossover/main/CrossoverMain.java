@@ -28,10 +28,7 @@ import me.cable.crossover.main.inventoryitem.SpeedBoostItem;
 import me.cable.crossover.main.listeners.*;
 import me.cable.crossover.main.object.Minigame;
 import me.cable.crossover.main.object.RegistryItems;
-import me.cable.crossover.main.task.FallTeleportTask;
-import me.cable.crossover.main.task.InventoryItemsTask;
-import me.cable.crossover.main.task.Reader;
-import me.cable.crossover.main.task.VelocityBlocksTask;
+import me.cable.crossover.main.task.*;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -46,7 +43,7 @@ public final class CrossoverMain extends JavaPlugin {
 
     private ConfigHandler configHandler;
     private MinigameConfigHandler minigameConfigHandler;
-    private LeaderboardsHandler leaderboardsHandler;
+    private LeaderboardsConfigHandler leaderboardsConfigHandler;
     private MailHandler mailHandler;
     private PlayerData playerData;
 
@@ -95,14 +92,14 @@ public final class CrossoverMain extends JavaPlugin {
         HiddenPathHandler.cleanup();
         Minigame.unregisterAll();
         SpeedBoostItem.saveSpeedBoosts();
-        leaderboardsHandler.save();
+        leaderboardsConfigHandler.save();
         playerData.saveAll();
     }
 
     private void initializeHandlers() {
         configHandler = new ConfigHandler(this);
         minigameConfigHandler = new MinigameConfigHandler(this);
-        leaderboardsHandler = new LeaderboardsHandler(this);
+        leaderboardsConfigHandler = new LeaderboardsConfigHandler(this);
         playerData = new PlayerData(this);
         mailHandler = new MailHandler();
     }
@@ -128,7 +125,9 @@ public final class CrossoverMain extends JavaPlugin {
         BukkitScheduler bukkitScheduler = getServer().getScheduler();
         bukkitScheduler.scheduleSyncRepeatingTask(this, new FallTeleportTask(), 0, 2);
         bukkitScheduler.scheduleSyncRepeatingTask(this, new InventoryItemsTask(), 0, 60 * 20);
+        bukkitScheduler.runTaskTimerAsynchronously(this, new PlaytimeTask(), 0, 20);
         bukkitScheduler.runTaskTimerAsynchronously(this, new Reader(this), 0, 20);
+        bukkitScheduler.runTaskTimerAsynchronously(this, new UpdateLeaderboardTask(), 0, 60 * 20);
         bukkitScheduler.scheduleSyncRepeatingTask(this, new VelocityBlocksTask(), 0, 1);
     }
 

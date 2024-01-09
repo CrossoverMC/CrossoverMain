@@ -1,7 +1,7 @@
 package me.cable.crossover.main.features.hiddenpath;
 
 import me.cable.crossover.main.handler.ConfigHandler;
-import me.cable.crossover.main.handler.LeaderboardsHandler;
+import me.cable.crossover.main.handler.LeaderboardsConfigHandler;
 import me.cable.crossover.main.object.Region;
 import me.cable.crossover.main.util.ConfigHelper;
 import me.cable.crossover.main.util.Utils;
@@ -78,7 +78,7 @@ public class HiddenPathVenue {
         if (player == null) return;
 
         long time = System.currentTimeMillis() - startTime;
-        YamlConfiguration leaderboards = LeaderboardsHandler.config();
+        YamlConfiguration leaderboards = LeaderboardsConfigHandler.config();
         String path = HiddenPathHandler.LEADERBOARDS_PATH + "." + player.getUniqueId();
         long pb;
 
@@ -90,14 +90,14 @@ public class HiddenPathVenue {
         }
         if (time >= pb) {
             ConfigHandler.settings().message(ConfigHandler.PATH_MESSAGES + ".hidden-path-finish")
-                    .placeholder("personal_best", Utils.formatDuration(pb))
-                    .placeholder("time", Utils.formatDuration(time))
+                    .placeholder("personal_best", Utils.formatDurationMillis(pb))
+                    .placeholder("time", Utils.formatDurationMillis(time))
                     .send(player);
         } else {
             // new personal best
             ConfigHandler.settings().message(ConfigHandler.PATH_MESSAGES + ".hidden-path-finish-pb")
-                    .placeholder("previous_personal_best", Utils.formatDuration(pb))
-                    .placeholder("time", Utils.formatDuration(time))
+                    .placeholder("previous_personal_best", Utils.formatDurationMillis(pb))
+                    .placeholder("time", Utils.formatDurationMillis(time))
                     .send(player);
             leaderboards.set(path, time);
         }

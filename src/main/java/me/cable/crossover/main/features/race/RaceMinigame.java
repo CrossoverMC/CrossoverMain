@@ -207,7 +207,7 @@ public class RaceMinigame extends Minigame {
 
         getMessage("finish")
                 .placeholder("player", player.getName())
-                .placeholder("time", Utils.formatDuration(time))
+                .placeholder("time", Utils.formatDurationMillis(time))
                 .send(players.keySet());
 
         checkPlayerCount();

@@ -17,6 +17,7 @@ import java.util.Set;
 public class ConfigHandler {
 
     public static final String PATH_INVENTORY_ITEMS = "inventory-items";
+    public static final String PATH_LEADERBOARDS = "leaderboards";
     public static final String PATH_MESSAGES = "messages";
 
     private final CrossoverMain crossoverMain;

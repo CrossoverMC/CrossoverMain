@@ -11,6 +11,7 @@ import me.cable.crossover.main.handler.ConfigHandler;
 import me.cable.crossover.main.handler.InventoryItems;
 import me.cable.crossover.main.handler.InventoryPlacers;
 import me.cable.crossover.main.handler.MinigameConfigHandler;
+import me.cable.crossover.main.leaderboard.Leaderboard;
 import me.cable.crossover.main.shop.Shop;
 import me.cable.crossover.main.util.Color;
 import me.cable.crossover.main.util.Rest;
@@ -191,6 +192,7 @@ public class MainCommand extends CustomCommand {
 
                 configHandler.load(player);
                 minigameConfigHandler.load(player);
+                Leaderboard.loadLeaderboards();
 
                 sender.sendMessage(Color.SUCCESS + "Configuration reloaded in "
                         + Color.SPECIAL + (System.currentTimeMillis() - millis) + Color.SUCCESS + " ms.");
