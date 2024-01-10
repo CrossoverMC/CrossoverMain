@@ -49,7 +49,7 @@ public class SpleefMinigame extends Minigame {
 
         getMessage("elimination")
                 .placeholder("player", player.getName())
-                .send(alive);
+                .send(allPlayers);
     }
 
     @Override

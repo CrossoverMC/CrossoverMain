@@ -24,6 +24,11 @@ public class Message {
         return this;
     }
 
+    public @NotNull Message add(@NotNull Message message) {
+        lines.addAll(message.lines);
+        return this;
+    }
+
     public void send(@NotNull CommandSender commandSender) {
         for (String line : lines) {
             commandSender.sendMessage(StringUtils.format(StringUtils.replace(line, placeholders)));

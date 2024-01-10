@@ -82,15 +82,23 @@ leaderboards:
     donations:
       location: "world,0.0,0.0,0.0"
       title: "Top Donors"
-      exclude: []
+      exclude: [ ]
     hidden-path:
       location: "world,0.0,0.0,0.0"
       title: "Hidden Path Quickest Times"
-      exclude: []
+      exclude: [ ]
     playtime:
       location: "world,0.0,0.0,0.0"
       title: "Total Playtime"
-      exclude: []
+      exclude: [ ]
+    race:
+      location: "world,0.0,0.0,0.0"
+      title: "Race Times"
+      exclude: [ ]
+    race-lap:
+      location: "world,0.0,0.0,0.0"
+      title: "Race Laps"
+      exclude: [ ]
 
 main-menu:
   title: "Your Stuff"

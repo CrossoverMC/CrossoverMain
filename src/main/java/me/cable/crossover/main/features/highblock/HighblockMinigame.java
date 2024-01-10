@@ -1,5 +1,6 @@
 package me.cable.crossover.main.features.highblock;
 
+import me.cable.crossover.main.util.Message;
 import me.cable.crossover.main.util.NumberUtils;
 import me.cable.crossover.main.object.Minigame;
 import org.bukkit.Bukkit;

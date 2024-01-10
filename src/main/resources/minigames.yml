@@ -44,10 +44,33 @@ minigames:
       messages:
         finish: # {player} {time}
           - "&6{player} &ahas finished with a time of &6{time}&a."
-        lap: # {lap} {previous_lap}
-          - "&aYou are on &6lap {lap}&a."
+        lap: # {lap} {previous_lap} {split}
+          - "&aYou are on &6lap {lap}&a (lap {previous_lap}: &6{split}&a)."
+        nobody-finished:
+          - "&cNobody finished the race!"
+        pb-full: # {time}
+          - "&aYou achieved a new personal best of &6{time}&a!"
+        pb-lap: # {time}
+          - "&aYou achieved a new fastest lap personal best of &6{time}&a!"
         time-up:
           - "&cYou ran out of time."
+        winners:
+          full:
+            bottom:
+              - "&6-----------------------"
+            top:
+              - "     &6&lFastest Times"
+              - "&6-----------------------"
+            winner: # {player} {pos} {time}
+              - "&b{pos} - &f{player} &a- {time}"
+          lap:
+            bottom:
+              - "&6-----------------------"
+            top:
+              - "     &6&lFastest Laps"
+              - "&6-----------------------"
+            winner: # {player} {pos} {time}
+              - "&b{pos} - &f{player} &a- {time}"
     instances:
       0:
         countdown: 10

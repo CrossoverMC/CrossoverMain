@@ -43,7 +43,9 @@ public abstract class Leaderboard {
         placedLeaderboards.addAll(List.of(
                 new DonationsLeaderboard(),
                 new HiddenPathLeaderboard(),
-                new PlayTimeLeaderboard()
+                new PlayTimeLeaderboard(),
+                new RaceLeaderboard(),
+                new RaceLapLeaderboard()
         ));
     }
 

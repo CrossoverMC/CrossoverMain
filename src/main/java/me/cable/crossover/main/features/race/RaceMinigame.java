@@ -3,6 +3,7 @@ package me.cable.crossover.main.features.race;
 import me.cable.crossover.main.CrossoverMain;
 import me.cable.crossover.main.features.playerspeed.SpeedModifier;
 import me.cable.crossover.main.features.playerspeed.SpeedPriority;
+import me.cable.crossover.main.handler.LeaderboardsConfigHandler;
 import me.cable.crossover.main.object.Minigame;
 import me.cable.crossover.main.object.Region;
 import me.cable.crossover.main.util.ConfigHelper;
@@ -15,6 +16,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Lightable;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -24,16 +26,17 @@ import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 public class RaceMinigame extends Minigame {
 
-    private final List<Player> interactedFinishLine = new ArrayList<>();
+    public static final String LEADERBOARDS_PATH_FULL = "race";
+    public static final String LEADERBOARDS_PATH_LAP = "race-lap";
+
     private Map<Player, PlayerInfo> players;
+    private List<Player> finishedPlayers;
+    private List<Player> interactedFinishLine;
     private Region finishLineRegion;
     private long startTime;
     private int maxTimeTaskId;
@@ -55,22 +58,6 @@ public class RaceMinigame extends Minigame {
         for (String string : settings().strList("barriers")) {
             Region region = Region.of(string, worldName);
             region.fill(material);
-        }
-    }
-
-    private void handlePlayers(@NotNull List<Player> players) {
-        this.players = new HashMap<>();
-        Location startLoc = settings().loc("start-location", getWorld());
-
-        for (Player player : players) {
-            PlayerInfo playerInfo = new PlayerInfo();
-            playerInfo.speedModifier = new SpeedModifier(player, 1, SpeedPriority.HIGH);
-            playerInfo.speedModifier.attachWalk();
-            this.players.put(player, playerInfo);
-
-            if (startLoc != null) {
-                player.teleport(startLoc);
-            }
         }
     }
 
@@ -98,9 +85,27 @@ public class RaceMinigame extends Minigame {
         }, settings().integer("max-time"));
     }
 
+    private void handlePlayers(@NotNull List<Player> players) {
+        this.players = new HashMap<>();
+        Location startLoc = settings().loc("start-location", getWorld());
+
+        for (Player player : players) {
+            PlayerInfo playerInfo = new PlayerInfo();
+            playerInfo.speedModifier = new SpeedModifier(player, 1, SpeedPriority.HIGH);
+            playerInfo.speedModifier.attachWalk();
+            this.players.put(player, playerInfo);
+
+            if (startLoc != null) {
+                player.teleport(startLoc);
+            }
+        }
+    }
+
     @Override
     protected void startGame(@NotNull List<Player> players) {
         handlePlayers(players);
+        finishedPlayers = new ArrayList<>();
+        interactedFinishLine = new ArrayList<>();
         finishLineRegion = settings().reg("finish-line", getWorldName());
 
         ConfigHelper startLightsSection = startLights();
@@ -194,12 +199,13 @@ public class RaceMinigame extends Minigame {
         }
     }
 
-    private void playerFinish(@NotNull Player player, @NotNull PlayerInfo playerInfo) {
-        long time = System.currentTimeMillis() - startTime;
+    private void playerFinish(@NotNull Player player, @NotNull PlayerInfo playerInfo, long currentTime) {
         Location endLoc = endLocation();
 
         playerInfo.finished = true;
+        playerInfo.raceTime = currentTime - startTime;
         playerInfo.speedModifier.detachWalk();
+        finishedPlayers.add(player);
 
         if (endLoc != null) {
             player.teleport(endLoc);
@@ -207,7 +213,7 @@ public class RaceMinigame extends Minigame {
 
         getMessage("finish")
                 .placeholder("player", player.getName())
-                .placeholder("time", Utils.formatDurationMillis(time))
+                .placeholder("time", Utils.formatDurationMillis(playerInfo.raceTime))
                 .send(players.keySet());
 
         checkPlayerCount();
@@ -217,24 +223,92 @@ public class RaceMinigame extends Minigame {
         PlayerInfo playerInfo = players.get(player);
         if (playerInfo == null || playerInfo.finished) return;
 
-        playerInfo.lap++;
         int totalLaps = settings().integer("laps");
+        long currentTime = System.currentTimeMillis();
+
+        playerInfo.lap++;
 
         if (playerInfo.lap - 1 == totalLaps) {
-            playerFinish(player, playerInfo);
+            playerFinish(player, playerInfo, currentTime);
         } else if (playerInfo.lap > 1) {
+            long lapTime = currentTime - playerInfo.lapStartTime;
+
+            if (lapTime < playerInfo.fastestLapTime) {
+                playerInfo.fastestLapTime = lapTime;
+            }
+
             getMessage("lap")
                     .placeholder("lap", Integer.toString(playerInfo.lap))
                     .placeholder("previous_lap", Integer.toString(playerInfo.lap - 1))
+                    .placeholder("split", Utils.formatDurationMillis(lapTime))
                     .send(player);
         }
+
+        playerInfo.lapStartTime = currentTime;
+    }
+
+    private @NotNull List<Entry<Player, Long>> getTopSplits() {
+        List<Entry<Player, Long>> list = new ArrayList<>();
+
+        for (Entry<Player, PlayerInfo> entry : players.entrySet()) {
+            PlayerInfo playerInfo = entry.getValue();
+            if (playerInfo.finished) list.add(new AbstractMap.SimpleEntry<>(entry.getKey(), playerInfo.fastestLapTime));
+        }
+
+        list.sort((a, b) -> (int) (a.getValue() - b.getValue()));
+        return list;
+    }
+
+    private void announceWinners() {
+        Set<Player> sendTo = players.keySet();
+
+        if (finishedPlayers.isEmpty()) {
+            getMessage("nobody-finished").send(sendTo);
+            return;
+        }
+
+        getMessage("winners.full.top").send(sendTo);
+        int i = 0;
+
+        for (Player player : finishedPlayers) {
+            PlayerInfo playerInfo = players.get(player);
+            if (playerInfo == null) continue;
+
+            getMessage("winners.full.winner")
+                    .placeholder("player", player.getName())
+                    .placeholder("pos", Integer.toString(i + 1))
+                    .placeholder("time", Utils.formatDurationMillis(playerInfo.raceTime))
+                    .send(sendTo);
+
+            if (i++ >= 2) {
+                break;
+            }
+        }
+
+        getMessage("winners.full.bottom").send(sendTo);
+        getMessage("winners.lap.top").send(sendTo);
+
+        i = 0;
+
+        for (Entry<Player, Long> entry : getTopSplits()) {
+            getMessage("winners.lap.winner")
+                    .placeholder("player", entry.getKey().getName())
+                    .placeholder("pos", Integer.toString(i + 1))
+                    .placeholder("time", Utils.formatDurationMillis(entry.getValue()))
+                    .send(sendTo);
+
+            if (i++ >= 2) {
+                break;
+            }
+        }
+
+        getMessage("winners.lap.bottom").send(sendTo);
     }
 
     @Override
     protected void cleanup() {
         Bukkit.getScheduler().cancelTask(maxTimeTaskId);
         startTask.cancel();
-        interactedFinishLine.clear();
 
         Location endLoc = endLocation();
 
@@ -242,7 +316,39 @@ public class RaceMinigame extends Minigame {
             Player player = entry.getKey();
             PlayerInfo playerInfo = entry.getValue();
 
-            if (!playerInfo.finished) {
+            if (playerInfo.finished) {
+                // handle leaderboard
+                YamlConfiguration lbc = LeaderboardsConfigHandler.config();
+                String fullPath = LEADERBOARDS_PATH_FULL + "." + player.getUniqueId();
+
+                if (lbc.isSet(fullPath)) {
+                    long pb = lbc.getLong(fullPath);
+
+                    if (playerInfo.raceTime < pb) {
+                        lbc.set(fullPath, playerInfo.raceTime);
+                        getMessage("pb-full")
+                                .placeholder("time", Utils.formatDurationMillis(playerInfo.raceTime))
+                                .send(player);
+                    }
+                } else {
+                    lbc.set(fullPath, playerInfo.raceTime);
+                }
+
+                String lapPath = LEADERBOARDS_PATH_LAP + "." + player.getUniqueId();
+
+                if (lbc.isSet(lapPath)) {
+                    long pb = lbc.getLong(lapPath);
+
+                    if (playerInfo.fastestLapTime < pb) {
+                        lbc.set(lapPath, playerInfo.fastestLapTime);
+                        getMessage("pb-lap")
+                                .placeholder("time", Utils.formatDurationMillis(playerInfo.fastestLapTime))
+                                .send(player);
+                    }
+                } else {
+                    lbc.set(lapPath, playerInfo.fastestLapTime);
+                }
+            } else {
                 playerInfo.speedModifier.detachWalk();
 
                 if (endLoc != null) {
@@ -251,7 +357,10 @@ public class RaceMinigame extends Minigame {
             }
         }
 
-        players.clear();
+        announceWinners();
+        players = null;
+        finishedPlayers = null;
+        interactedFinishLine = null;
         setBarriers(true);
 
         // lights
@@ -305,6 +414,9 @@ public class RaceMinigame extends Minigame {
     private static class PlayerInfo {
         SpeedModifier speedModifier;
         int lap; // player's current lap
+        long lapStartTime; // time of lap start
+        long fastestLapTime = Long.MAX_VALUE;
+        long raceTime; // time taken to finish race
         boolean finished;
     }
 }
