@@ -22,6 +22,12 @@ artifacts-menu:
         name: "&a"
         fill: true
 
+block-replace:
+  enabled: false
+  location: "world,0,0,0"
+  material: ICE
+  time: 60 # seconds
+
 clutch-levels:
   1: "0.0,0.0,0.0,0.0,0.0"
   2: "0.0,0.0,0.0,0.0,0.0"

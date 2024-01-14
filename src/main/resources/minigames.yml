@@ -52,25 +52,33 @@ minigames:
           - "&aYou achieved a new personal best of &6{time}&a!"
         pb-lap: # {time}
           - "&aYou achieved a new fastest lap personal best of &6{time}&a!"
+        splits:
+          top:
+            - "     &6&lSplits"
+            - "&6-----------------------"
+          split: # {lap} {time}
+            - "&eLap {lap}: &6{time}"
+          bottom:
+            - "&6-----------------------"
         time-up:
           - "&cYou ran out of time."
         winners:
           full:
-            bottom:
-              - "&6-----------------------"
             top:
               - "     &6&lFastest Times"
               - "&6-----------------------"
             winner: # {player} {pos} {time}
               - "&b{pos} - &f{player} &a- {time}"
-          lap:
             bottom:
               - "&6-----------------------"
+          lap:
             top:
               - "     &6&lFastest Laps"
               - "&6-----------------------"
             winner: # {player} {pos} {time}
               - "&b{pos} - &f{player} &a- {time}"
+            bottom:
+              - "&6-----------------------"
     instances:
       0:
         countdown: 10
@@ -85,6 +93,10 @@ minigames:
           finish-line: "0,0,0,0,0,0"
           laps: 3
           max-time: 12000
+          podium-npcs:
+            0: 0
+            1: 0
+            2: 0
           start-lights:
             delay: 60
             interval: 20

@@ -14,6 +14,7 @@ import me.cable.crossover.main.command.UnlinkCommand;
 import me.cable.crossover.main.features.antigravity.AntigravityFlagHandler;
 import me.cable.crossover.main.features.antigravity.AntigravityListener;
 import me.cable.crossover.main.features.artifacts.ArtifactsHandler;
+import me.cable.crossover.main.features.blockreplace.BlockReplaceTask;
 import me.cable.crossover.main.features.booth.BoothFlagHandler;
 import me.cable.crossover.main.features.booth.BoothListener;
 import me.cable.crossover.main.features.clutch.ClutchHandler;
@@ -141,6 +142,9 @@ public final class CrossoverMain extends JavaPlugin {
 
         // artifacts
         pluginManager.registerEvents(new ArtifactsHandler(), this);
+
+        // block replace
+        new BlockReplaceTask(this).start();
 
         // booth
         pluginManager.registerEvents(new BoothListener(), this);

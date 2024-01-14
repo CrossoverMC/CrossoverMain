@@ -9,6 +9,8 @@ import me.cable.crossover.main.object.Region;
 import me.cable.crossover.main.util.ConfigHelper;
 import me.cable.crossover.main.util.SoundEffect;
 import me.cable.crossover.main.util.Utils;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -35,7 +37,7 @@ public class RaceMinigame extends Minigame {
     public static final String LEADERBOARDS_PATH_LAP = "race-lap";
 
     private Map<Player, PlayerInfo> players;
-    private List<Player> finishedPlayers;
+    private List<Entry<Player, PlayerInfo>> finishedPlayers;
     private List<Player> interactedFinishLine;
     private Region finishLineRegion;
     private long startTime;
@@ -199,13 +201,60 @@ public class RaceMinigame extends Minigame {
         }
     }
 
+    private void checkPersonalBests(@NotNull Player player, @NotNull PlayerInfo playerInfo) {
+        YamlConfiguration lbc = LeaderboardsConfigHandler.config();
+        String fullPath = LEADERBOARDS_PATH_FULL + "." + player.getUniqueId();
+
+        if (lbc.isSet(fullPath)) {
+            long pb = lbc.getLong(fullPath);
+
+            if (playerInfo.raceTime < pb) {
+                lbc.set(fullPath, playerInfo.raceTime);
+                getMessage("pb-full")
+                        .placeholder("time", Utils.formatDurationMillis(playerInfo.raceTime))
+                        .send(player);
+            }
+        } else {
+            lbc.set(fullPath, playerInfo.raceTime);
+        }
+
+        String lapPath = LEADERBOARDS_PATH_LAP + "." + player.getUniqueId();
+
+        if (lbc.isSet(lapPath)) {
+            long pb = lbc.getLong(lapPath);
+
+            if (playerInfo.fastestLapTime < pb) {
+                lbc.set(lapPath, playerInfo.fastestLapTime);
+                getMessage("pb-lap")
+                        .placeholder("time", Utils.formatDurationMillis(playerInfo.fastestLapTime))
+                        .send(player);
+            }
+        } else {
+            lbc.set(lapPath, playerInfo.fastestLapTime);
+        }
+    }
+
+    private void showSplits(@NotNull Player player, @NotNull PlayerInfo playerInfo) {
+        getMessage("splits.top").send(player);
+
+        for (int i = 0; i < playerInfo.lapTimes.size(); i++) {
+            long lapTime = playerInfo.lapTimes.get(i);
+            getMessage("splits.split")
+                    .placeholder("lap", Integer.toString(i + 1))
+                    .placeholder("time", Utils.formatDurationMillis(lapTime))
+                    .send(player);
+        }
+
+        getMessage("splits.bottom").send(player);
+    }
+
     private void playerFinish(@NotNull Player player, @NotNull PlayerInfo playerInfo, long currentTime) {
         Location endLoc = endLocation();
 
         playerInfo.finished = true;
         playerInfo.raceTime = currentTime - startTime;
         playerInfo.speedModifier.detachWalk();
-        finishedPlayers.add(player);
+        finishedPlayers.add(new AbstractMap.SimpleEntry<>(player, playerInfo));
 
         if (endLoc != null) {
             player.teleport(endLoc);
@@ -215,7 +264,8 @@ public class RaceMinigame extends Minigame {
                 .placeholder("player", player.getName())
                 .placeholder("time", Utils.formatDurationMillis(playerInfo.raceTime))
                 .send(players.keySet());
-
+        checkPersonalBests(player, playerInfo);
+        showSplits(player, playerInfo);
         checkPlayerCount();
     }
 
@@ -228,20 +278,20 @@ public class RaceMinigame extends Minigame {
 
         playerInfo.lap++;
 
-        if (playerInfo.lap - 1 == totalLaps) {
-            playerFinish(player, playerInfo, currentTime);
-        } else if (playerInfo.lap > 1) {
+        if (playerInfo.lap > 1) {
             long lapTime = currentTime - playerInfo.lapStartTime;
+            playerInfo.lapTimes.add(lapTime);
+            playerInfo.fastestLapTime = Math.min(playerInfo.fastestLapTime, lapTime);
 
-            if (lapTime < playerInfo.fastestLapTime) {
-                playerInfo.fastestLapTime = lapTime;
+            if (playerInfo.lap - 1 == totalLaps) {
+                playerFinish(player, playerInfo, currentTime);
+            } else {
+                getMessage("lap")
+                        .placeholder("lap", Integer.toString(playerInfo.lap))
+                        .placeholder("previous_lap", Integer.toString(playerInfo.lap - 1))
+                        .placeholder("split", Utils.formatDurationMillis(lapTime))
+                        .send(player);
             }
-
-            getMessage("lap")
-                    .placeholder("lap", Integer.toString(playerInfo.lap))
-                    .placeholder("previous_lap", Integer.toString(playerInfo.lap - 1))
-                    .placeholder("split", Utils.formatDurationMillis(lapTime))
-                    .send(player);
         }
 
         playerInfo.lapStartTime = currentTime;
@@ -268,41 +318,56 @@ public class RaceMinigame extends Minigame {
         }
 
         getMessage("winners.full.top").send(sendTo);
-        int i = 0;
 
-        for (Player player : finishedPlayers) {
-            PlayerInfo playerInfo = players.get(player);
-            if (playerInfo == null) continue;
+        for (int i = 0; i < Math.min(finishedPlayers.size(), 3); i++) {
+            Entry<Player, PlayerInfo> entry = finishedPlayers.get(i);
 
             getMessage("winners.full.winner")
-                    .placeholder("player", player.getName())
+                    .placeholder("player", entry.getKey().getName())
                     .placeholder("pos", Integer.toString(i + 1))
-                    .placeholder("time", Utils.formatDurationMillis(playerInfo.raceTime))
+                    .placeholder("time", Utils.formatDurationMillis(entry.getValue().raceTime))
                     .send(sendTo);
-
-            if (i++ >= 2) {
-                break;
-            }
         }
 
         getMessage("winners.full.bottom").send(sendTo);
         getMessage("winners.lap.top").send(sendTo);
 
-        i = 0;
+        List<Entry<Player, Long>> topSplits = getTopSplits();
 
-        for (Entry<Player, Long> entry : getTopSplits()) {
+        for (int i = 0; i < Math.min(topSplits.size(), 3); i++) {
+            Entry<Player, Long> entry = topSplits.get(i);
+
             getMessage("winners.lap.winner")
                     .placeholder("player", entry.getKey().getName())
                     .placeholder("pos", Integer.toString(i + 1))
                     .placeholder("time", Utils.formatDurationMillis(entry.getValue()))
                     .send(sendTo);
-
-            if (i++ >= 2) {
-                break;
-            }
         }
 
         getMessage("winners.lap.bottom").send(sendTo);
+    }
+
+    private void displayWinnerNpcs() {
+        if (finishedPlayers.isEmpty()) return;
+
+        ConfigurationSection podiumNpcsSection = settings().csnn("podium-npcs");
+        List<Integer> podiumNpcIds = new ArrayList<>();
+
+        for (int i = 0; true; i++) {
+            String key = Integer.toString(i);
+            if (!podiumNpcsSection.isSet(key)) break;
+            podiumNpcIds.add(podiumNpcsSection.getInt(key));
+        }
+        for (int i = 0; i < podiumNpcIds.size(); i++) {
+            int npcId = podiumNpcIds.get(i);
+            NPC npc = CitizensAPI.getNPCRegistry().getById(npcId);
+
+            if (npc != null) {
+                boolean hasPlayer = i < finishedPlayers.size();
+                npc.data().setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, hasPlayer);
+                npc.setName(hasPlayer ? finishedPlayers.get(i).getKey().getName() : "N/A");
+            }
+        }
     }
 
     @Override
@@ -316,39 +381,7 @@ public class RaceMinigame extends Minigame {
             Player player = entry.getKey();
             PlayerInfo playerInfo = entry.getValue();
 
-            if (playerInfo.finished) {
-                // handle leaderboard
-                YamlConfiguration lbc = LeaderboardsConfigHandler.config();
-                String fullPath = LEADERBOARDS_PATH_FULL + "." + player.getUniqueId();
-
-                if (lbc.isSet(fullPath)) {
-                    long pb = lbc.getLong(fullPath);
-
-                    if (playerInfo.raceTime < pb) {
-                        lbc.set(fullPath, playerInfo.raceTime);
-                        getMessage("pb-full")
-                                .placeholder("time", Utils.formatDurationMillis(playerInfo.raceTime))
-                                .send(player);
-                    }
-                } else {
-                    lbc.set(fullPath, playerInfo.raceTime);
-                }
-
-                String lapPath = LEADERBOARDS_PATH_LAP + "." + player.getUniqueId();
-
-                if (lbc.isSet(lapPath)) {
-                    long pb = lbc.getLong(lapPath);
-
-                    if (playerInfo.fastestLapTime < pb) {
-                        lbc.set(lapPath, playerInfo.fastestLapTime);
-                        getMessage("pb-lap")
-                                .placeholder("time", Utils.formatDurationMillis(playerInfo.fastestLapTime))
-                                .send(player);
-                    }
-                } else {
-                    lbc.set(lapPath, playerInfo.fastestLapTime);
-                }
-            } else {
+            if (!playerInfo.finished) {
                 playerInfo.speedModifier.detachWalk();
 
                 if (endLoc != null) {
@@ -358,10 +391,12 @@ public class RaceMinigame extends Minigame {
         }
 
         announceWinners();
+        displayWinnerNpcs();
+        setBarriers(true);
+
         players = null;
         finishedPlayers = null;
         interactedFinishLine = null;
-        setBarriers(true);
 
         // lights
 
@@ -413,6 +448,7 @@ public class RaceMinigame extends Minigame {
 
     private static class PlayerInfo {
         SpeedModifier speedModifier;
+        List<Long> lapTimes = new ArrayList<>();
         int lap; // player's current lap
         long lapStartTime; // time of lap start
         long fastestLapTime = Long.MAX_VALUE;
