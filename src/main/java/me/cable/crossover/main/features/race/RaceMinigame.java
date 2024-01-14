@@ -93,8 +93,6 @@ public class RaceMinigame extends Minigame {
 
         for (Player player : players) {
             PlayerInfo playerInfo = new PlayerInfo();
-            playerInfo.speedModifier = new SpeedModifier(player, 1, SpeedPriority.HIGH);
-            playerInfo.speedModifier.attachWalk();
             this.players.put(player, playerInfo);
 
             if (startLoc != null) {
@@ -183,6 +181,11 @@ public class RaceMinigame extends Minigame {
         doTeleportRegionsCheck();
     }
 
+    @Override
+    protected @Nullable SpeedModifier speedModifier(@NotNull Player player) {
+        return new SpeedModifier(player, 1, SpeedPriority.HIGH);
+    }
+
     private @NotNull List<Player> getNotFinished() {
         List<Player> list = new ArrayList<>();
 
@@ -253,7 +256,7 @@ public class RaceMinigame extends Minigame {
 
         playerInfo.finished = true;
         playerInfo.raceTime = currentTime - startTime;
-        playerInfo.speedModifier.detachWalk();
+        detachSpeedModifier(player);
         finishedPlayers.add(new AbstractMap.SimpleEntry<>(player, playerInfo));
 
         if (endLoc != null) {
@@ -381,12 +384,8 @@ public class RaceMinigame extends Minigame {
             Player player = entry.getKey();
             PlayerInfo playerInfo = entry.getValue();
 
-            if (!playerInfo.finished) {
-                playerInfo.speedModifier.detachWalk();
-
-                if (endLoc != null) {
-                    player.teleport(endLoc);
-                }
+            if (!playerInfo.finished && endLoc != null) {
+                player.teleport(endLoc);
             }
         }
 
@@ -447,7 +446,6 @@ public class RaceMinigame extends Minigame {
     }
 
     private static class PlayerInfo {
-        SpeedModifier speedModifier;
         List<Long> lapTimes = new ArrayList<>();
         int lap; // player's current lap
         long lapStartTime; // time of lap start

@@ -1,6 +1,8 @@
 package me.cable.crossover.main.object;
 
 import me.cable.crossover.main.CrossoverMain;
+import me.cable.crossover.main.features.playerspeed.SpeedModifier;
+import me.cable.crossover.main.features.playerspeed.SpeedPriority;
 import me.cable.crossover.main.handler.MinigameConfigHandler;
 import me.cable.crossover.main.util.ConfigHelper;
 import me.cable.crossover.main.util.Message;
@@ -31,6 +33,7 @@ public abstract class Minigame implements Listener {
     private int countdown;
     private boolean waiting;
     private boolean gameRunning;
+    private List<SpeedModifier> activeSpeedModifiers;
 
     private static @NotNull ConfigHelper getGlobalMinigameSettings() {
         return MinigameConfigHandler.getConfig().ch("settings");
@@ -59,10 +62,23 @@ public abstract class Minigame implements Listener {
                         minigame.countdown = minigame.getCountdown();
                     }
                     if (minigame.countdown <= 0) {
+                        // start minigame
                         getGlobalMinigameSettings().message("start-message").send(players);
-                        Bukkit.getPluginManager().registerEvents(minigame, CrossoverMain.getInstance());
+                        Bukkit.getPluginManager().registerEvents(minigame, minigame.crossoverMain);
                         minigame.startGame(players);
                         minigame.gameRunning = true;
+
+                        // default speed modifiers
+                        minigame.activeSpeedModifiers = new ArrayList<>();
+
+                        for (Player player : players) {
+                            SpeedModifier speedModifier = minigame.speedModifier(player);
+
+                            if (speedModifier != null) {
+                                speedModifier.attachWalk();
+                                minigame.activeSpeedModifiers.add(speedModifier);
+                            }
+                        }
                     } else if (minigame.countdown % 10 == 0 || minigame.countdown <= 5) {
                         getGlobalMinigameSettings().message("starting-message")
                                 .placeholder("time", Integer.toString(minigame.countdown))
@@ -162,6 +178,19 @@ public abstract class Minigame implements Listener {
         return Collections.emptyList();
     }
 
+    protected @Nullable SpeedModifier speedModifier(@NotNull Player player) {
+        return new SpeedModifier(player, SpeedModifier.DEFAULT_WALK, SpeedPriority.HIGH);
+    }
+
+    protected final void detachSpeedModifier(@NotNull Player player) {
+        for (SpeedModifier speedModifier : activeSpeedModifiers) {
+            if (speedModifier.getPlayer().equals(player)) {
+                speedModifier.detachWalk();
+                break;
+            }
+        }
+    }
+
     protected void tick() {}
 
     protected final void endGame() {
@@ -172,6 +201,9 @@ public abstract class Minigame implements Listener {
                 player.teleport(waitingLoc);
             }
         }
+
+        activeSpeedModifiers.forEach(SpeedModifier::detachWalk);
+        activeSpeedModifiers = null;
 
         gameRunning = false;
         HandlerList.unregisterAll(this);

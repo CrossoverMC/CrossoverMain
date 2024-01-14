@@ -9,6 +9,9 @@ import java.util.function.Predicate;
 
 public class SpeedModifier {
 
+    public static final float DEFAULT_FLY = 0.1f;
+    public static final float DEFAULT_WALK = 0.2f;
+
     private static final List<SpeedModifier> flySpeedModifiers = new ArrayList<>();
     private static final List<SpeedModifier> walkSpeedModifiers = new ArrayList<>();
 
@@ -27,7 +30,7 @@ public class SpeedModifier {
                 .filter(m -> m.getPlayer().equals(player))
                 .sorted((a, b) -> b.getPriority().ordinal() - a.getPriority().ordinal())
                 .toList();
-        float value = playerModifiers.isEmpty() ? (walk ? 0.2f : 0.1f) : playerModifiers.get(0).getValue();
+        float value = playerModifiers.isEmpty() ? (walk ? DEFAULT_WALK : DEFAULT_FLY) : playerModifiers.get(0).getValue();
 
         if (walk) {
             player.setWalkSpeed(value);
