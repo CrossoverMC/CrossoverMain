@@ -133,12 +133,12 @@ public abstract class Minigame implements Listener {
 
     /* Settings */
 
-    private @NotNull ConfigHelper getMinigameSettings() {
+    protected @NotNull ConfigHelper minigameSettings() {
         return MinigameConfigHandler.getConfig().ch(MinigameConfigHandler.MINIGAMES_PATH + "." + id + ".settings");
     }
 
     protected final @NotNull Message getMessage(@NotNull String path) {
-        return getMinigameSettings().message("messages." + path);
+        return minigameSettings().message("messages." + path);
     }
 
     private @NotNull ConfigHelper getInstanceSettings() {

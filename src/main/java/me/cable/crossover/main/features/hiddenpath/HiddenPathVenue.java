@@ -1,5 +1,7 @@
 package me.cable.crossover.main.features.hiddenpath;
 
+import me.cable.crossover.main.features.playerspeed.SpeedModifier;
+import me.cable.crossover.main.features.playerspeed.SpeedPriority;
 import me.cable.crossover.main.handler.ConfigHandler;
 import me.cable.crossover.main.handler.LeaderboardsConfigHandler;
 import me.cable.crossover.main.object.Region;
@@ -31,6 +33,7 @@ public class HiddenPathVenue {
     private final Region pathRegion;
 
     private @Nullable Player player;
+    private @Nullable SpeedModifier speedModifier;
     private @NotNull List<Block> path = Collections.emptyList();
     private long startTime;
 
@@ -60,9 +63,13 @@ public class HiddenPathVenue {
     public void start(@NotNull Player player) {
         if (this.player != null) return;
 
+        startTime = System.currentTimeMillis();
         path = new PathGenerator(direction, startBlock.toLocation(player.getWorld()).getBlock(), distance, pathRegion).generate();
         this.player = player;
-        startTime = System.currentTimeMillis();
+
+        speedModifier = new SpeedModifier(player, SpeedModifier.DEFAULT_WALK, SpeedPriority.HIGH);
+        speedModifier.attachWalk();
+
         ConfigHandler.settings().message(ConfigHandler.PATH_MESSAGES + ".hidden-path-start").send(player);
 
         if (ConfigHandler.hiddenPathSettings().bool("show-paths.enabled")) {
@@ -114,6 +121,13 @@ public class HiddenPathVenue {
 
     public void cleanup() {
         player = null;
+
+        if (speedModifier != null) {
+            speedModifier.detachWalk();
+            speedModifier = null;
+        }
+
+        // placements
         ConfigHelper placement = ConfigHandler.hiddenPathSettings()
                 .ch(HiddenPathHandler.VENUES_PATH + "." + id + ".placements.fix");
 

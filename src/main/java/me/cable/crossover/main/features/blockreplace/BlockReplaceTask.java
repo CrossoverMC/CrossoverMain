@@ -7,12 +7,10 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class BlockReplaceTask {
 
     private final CrossoverMain crossoverMain;
-    private @Nullable Integer taskId;
     private boolean replacing;
 
     public BlockReplaceTask(@NotNull CrossoverMain crossoverMain) {
@@ -24,11 +22,7 @@ public class BlockReplaceTask {
     }
 
     public void start() {
-        if (taskId != null) {
-            Bukkit.getScheduler().cancelTask(taskId);
-        }
-
-        taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(crossoverMain, () -> {
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(crossoverMain, () -> {
             if (!isEnabled() || replacing) return;
 
             Location loc = ConfigHandler.settings().loc("block-replace.location");

@@ -111,11 +111,14 @@ minigames:
 
   spleef:
     settings:
+      countdown: 3 # seconds
+      countdown-title: "&c{countdown}" # {countdown}
+      start-title: "&aGo!"
       messages:
         elimination: # {player}
           - "&6{player} &chas been eliminated!"
         no-win:
-          - "&aNobody won the spleef match."
+          - "&cNobody won the spleef match."
         win: # {player}
           - "&6{player} &ahas won the spleef match!"
     instances:
