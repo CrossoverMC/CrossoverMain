@@ -3,6 +3,7 @@ package me.cable.crossover.main.listeners;
 import me.cable.crossover.main.CrossoverMain;
 import me.cable.crossover.main.features.playerspeed.SpeedModifier;
 import me.cable.crossover.main.handler.ConfigHandler;
+import me.cable.crossover.main.handler.InventoryPlacers;
 import me.cable.crossover.main.handler.MailHandler;
 import me.cable.crossover.main.inventoryitem.SpeedBoostItem;
 import me.cable.crossover.main.util.Utils;
@@ -34,6 +35,7 @@ public class PlayerJoin implements Listener {
         }
         if (!Utils.hasBypass(player)) {
             player.getInventory().clear();
+            InventoryPlacers.place(player);
         }
     }
 
